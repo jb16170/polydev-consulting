@@ -1152,6 +1152,36 @@
     var pw = document.getElementById('admin-password');
     if (pw) pw.addEventListener('keydown', function(e){ if(e.key==='Enter') checkLogin(); });
 
+    // Formulaire de contact Formspree
+    var contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+      contactForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        var btn = document.getElementById('form-btn');
+        btn.textContent = 'Envoi en cours...';
+        btn.disabled = true;
+        var data = new FormData(contactForm);
+        try {
+          var res = await fetch('https://formspree.io/f/xpqjvbdg', {
+            method: 'POST',
+            body: data,
+            headers: { 'Accept': 'application/json' }
+          });
+          if (res.ok) {
+            document.getElementById('form-success').style.display = 'block';
+            contactForm.reset();
+            btn.textContent = 'Message envoyé ✓';
+          } else {
+            btn.textContent = 'Erreur, réessayez';
+            btn.disabled = false;
+          }
+        } catch(e) {
+          btn.textContent = 'Erreur, réessayez';
+          btn.disabled = false;
+        }
+      });
+    }
+
     // Initialiser le blog
     renderBlog();
   });
@@ -1800,22 +1830,22 @@
       </div>
     </div>
 
-    <div>
+    <form action="https://formspree.io/f/xpqjvbdg" method="POST" id="contact-form">
       <div class="form-group">
         <label>Nom & Prénom</label>
-        <input type="text" placeholder="Jean Dupont" />
+        <input type="text" name="nom" placeholder="Jean Dupont" required />
       </div>
       <div class="form-group">
         <label>Société</label>
-        <input type="text" placeholder="Votre entreprise" />
+        <input type="text" name="societe" placeholder="Votre entreprise" />
       </div>
       <div class="form-group">
         <label>Email professionnel</label>
-        <input type="email" placeholder="j.dupont@entreprise.com" />
+        <input type="email" name="email" placeholder="j.dupont@entreprise.com" required />
       </div>
       <div class="form-group">
         <label>Type de demande</label>
-        <select>
+        <select name="type_demande">
           <option value="">— Sélectionner —</option>
           <option>Formulation & Développement</option>
           <option>Caractérisation & Tests</option>
@@ -1827,10 +1857,13 @@
       </div>
       <div class="form-group">
         <label>Votre message</label>
-        <textarea placeholder="Décrivez brièvement votre besoin ou problématique…"></textarea>
+        <textarea name="message" placeholder="Décrivez brièvement votre besoin ou problématique…" required></textarea>
       </div>
-      <button class="form-submit">Envoyer la demande →</button>
-    </div>
+      <div id="form-success" style="display:none;color:#8ac87a;font-family:Space Mono,monospace;font-size:0.75rem;margin-bottom:1rem;padding:1rem;border:1px solid #8ac87a;">
+        ✓ Message envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.
+      </div>
+      <button type="submit" class="form-submit" id="form-btn">Envoyer la demande →</button>
+    </form>
   </div>
 </section>
 
@@ -1843,9 +1876,4 @@
   <div class="footer-right">
     <div class="footer-visit">
       <span>👁</span> <span id="visit-count">—</span> visites
-    </div>
-    <div class="footer-copy">Mentions légales · Politique de confidentialité</div>
-  </div>
-</footer>
-</body>
-</html>
+    </
