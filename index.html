@@ -955,6 +955,207 @@
       footer { flex-direction: column; gap: 1rem; text-align: center; }
     }
   </style>
+
+<script>
+  // ═══════════════════════════════════════════════════
+  //  POLYDEV CONSULTING — JavaScript Principal
+  // ═══════════════════════════════════════════════════
+
+  // ─── CONFIG ───
+  var SUPABASE_URL = 'https://kcukutvwvecllqneibsm.supabase.co';
+  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtjdWt1dHZ3dmVjbGxxbmVpYnNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTQxMTAsImV4cCI6MjA4ODEzMDExMH0.KOQuxdxTqb-8Yh5NF3xVTjvmw1sfS4zso28ghdpZGAE';
+  var isAdmin = false;
+  var editingId = null;
+
+  // ─── SUPABASE ───
+  async function sbFetch(path, method, body) {
+    var h = {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': method === 'DELETE' ? 'return=minimal' : 'return=representation'
+    };
+    var opts = { method: method || 'GET', headers: h };
+    if (body) opts.body = JSON.stringify(body);
+    try {
+      var res = await fetch(SUPABASE_URL + '/rest/v1/' + path, opts);
+      if (method === 'DELETE') return true;
+      var txt = await res.text();
+      if (!res.ok) { console.error('Supabase ' + res.status, txt); return null; }
+      return txt ? JSON.parse(txt) : [];
+    } catch(e) { console.error('Fetch:', e); return null; }
+  }
+  async function getArticles() { return (await sbFetch('articles?order=created_at.desc','GET')) || []; }
+  async function insertArticle(a) { return sbFetch('articles','POST',a); }
+  async function updateArticle(id,a) { return sbFetch('articles?id=eq.'+id,'PATCH',a); }
+  async function deleteArticleDb(id) { return sbFetch('articles?id=eq.'+id,'DELETE'); }
+
+  // ─── BLOG ───
+  var CAT_COLORS = {
+    'Actualité technique':'#4db8ff','Fiche matériau':'#7ab8c8',
+    "Retour d'expérience":'#8ac87a','Veille réglementaire':'#c87a7a','Administration':'#c8a96e'
+  };
+
+  async function renderBlog() {
+    var grid = document.getElementById('blog-grid');
+    var empty = document.getElementById('blog-empty');
+    if (!grid) return;
+    grid.style.display = 'block';
+    grid.innerHTML = '<div style="color:var(--muted);font-family:monospace;font-size:0.75rem;padding:2rem;text-align:center;">Chargement...</div>';
+    var articles = await getArticles();
+    grid.innerHTML = '';
+    if (!articles.length) { grid.style.display='none'; empty.style.display='block'; return; }
+    grid.style.display = 'grid'; empty.style.display = 'none';
+    articles.forEach(function(art) {
+      var c = CAT_COLORS[art.category] || '#4db8ff';
+      var card = document.createElement('div');
+      card.className = 'blog-card';
+      var ab = isAdmin
+        ? '<button class="blog-delete" onclick="event.stopPropagation();deleteArticle(\''+art.id+'\')">✕ Supprimer</button>'
+          +'<button class="blog-delete" style="margin-right:.5rem" onclick="event.stopPropagation();editArticle(\''+art.id+'\')">✎ Modifier</button>'
+        : '';
+      card.innerHTML = '<div class="blog-card-header"><span class="blog-category" style="border-color:'+c+';color:'+c+'">'+art.category+'</span><span class="blog-date">'+art.date+'</span></div>'
+        +'<div class="blog-card-body"><div class="blog-card-title">'+art.title+'</div><div class="blog-card-excerpt">'+art.excerpt+'</div></div>'
+        +'<div class="blog-card-footer">Lire l\'article \u2192 '+ab+'</div>';
+      card.addEventListener('click', (function(a){ return function(){ openArticle(a); }; })(art));
+      grid.appendChild(card);
+    });
+  }
+
+  // ─── MODALS ───
+  function openArticle(art) {
+    document.getElementById('modal-category').textContent = art.category;
+    document.getElementById('modal-title').textContent = art.title;
+    document.getElementById('modal-meta').textContent = 'Publié le ' + art.date;
+    document.getElementById('modal-content').textContent = art.content;
+    document.getElementById('article-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeArticle() {
+    document.getElementById('article-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ─── LOGIN ───
+  function openLogin() {
+    document.getElementById('login-modal').classList.add('open');
+    setTimeout(function(){ document.getElementById('admin-password').focus(); }, 100);
+  }
+  function closeLogin() {
+    document.getElementById('login-modal').classList.remove('open');
+    document.getElementById('login-error').classList.remove('show');
+    document.getElementById('admin-password').value = '';
+  }
+  function checkLogin() {
+    var pw = document.getElementById('admin-password').value;
+    if (pw === '3dh27ahJ@bou17!') {
+      isAdmin = true; closeLogin();
+      document.getElementById('admin-bar').style.display = 'flex';
+      document.getElementById('login-btn-wrapper').style.display = 'none';
+      renderBlog();
+    } else {
+      document.getElementById('login-error').classList.add('show');
+    }
+  }
+  function logoutAdmin() {
+    isAdmin = false;
+    document.getElementById('admin-bar').style.display = 'none';
+    document.getElementById('login-btn-wrapper').style.display = 'block';
+    closeEditor(); renderBlog();
+  }
+
+  // ─── ÉDITEUR ───
+  function openEditor() {
+    editingId = null;
+    document.getElementById('editor-title-label').textContent = 'Nouvel Article';
+    document.getElementById('art-title').value = '';
+    document.getElementById('art-excerpt').value = '';
+    document.getElementById('art-content').value = '';
+    document.getElementById('art-category').value = 'Actualité technique';
+    document.getElementById('blog-editor').classList.add('open');
+    document.getElementById('blog-editor').scrollIntoView({behavior:'smooth'});
+  }
+  function closeEditor() {
+    document.getElementById('blog-editor').classList.remove('open');
+    editingId = null;
+  }
+  async function editArticle(id) {
+    var arts = await getArticles();
+    var art = arts.find(function(a){ return a.id===id; });
+    if (!art) return;
+    editingId = id;
+    document.getElementById('editor-title-label').textContent = "Modifier l'article";
+    document.getElementById('art-title').value = art.title;
+    document.getElementById('art-excerpt').value = art.excerpt||'';
+    document.getElementById('art-content').value = art.content;
+    document.getElementById('art-category').value = art.category;
+    document.getElementById('blog-editor').classList.add('open');
+    document.getElementById('blog-editor').scrollIntoView({behavior:'smooth'});
+  }
+  async function publishArticle() {
+    var title = document.getElementById('art-title').value.trim();
+    var excerpt = document.getElementById('art-excerpt').value.trim();
+    var artContent = document.getElementById('art-content').value.trim();
+    var category = document.getElementById('art-category').value;
+    if (!title||!artContent){ alert('Veuillez remplir le titre et le contenu.'); return; }
+    var date = new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+    var art = { title:title, excerpt:excerpt||artContent.substring(0,120)+'\u2026', content:artContent, category:category, date:date };
+    var btn = document.getElementById('btn-publish');
+    btn.textContent='Publication...'; btn.disabled=true;
+    if (editingId) { await updateArticle(editingId,art); } else { await insertArticle(art); }
+    btn.textContent="Publier l'article"; btn.disabled=false;
+    closeEditor(); await renderBlog();
+  }
+  async function deleteArticle(id) {
+    if (!confirm('Supprimer cet article ?')) return;
+    await deleteArticleDb(id); await renderBlog();
+  }
+
+  // ─── INIT AU CHARGEMENT ───
+  window.addEventListener('DOMContentLoaded', function() {
+    // Compteur visites
+    var countEl = document.getElementById('visit-count');
+    var visits = parseInt(localStorage.getItem('polydev_visits')||'0') + 1;
+    localStorage.setItem('polydev_visits', visits);
+    if (countEl) countEl.textContent = visits.toLocaleString('fr-FR');
+
+    // Animations scroll
+    var faders = document.querySelectorAll('.fade-up');
+    faders.forEach(function(el){ el.classList.add('hidden'); });
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry,i){
+        if (entry.isIntersecting){
+          setTimeout(function(){ entry.target.classList.remove('hidden'); }, i*80);
+          obs.unobserve(entry.target);
+        }
+      });
+    }, {threshold:0.1});
+    faders.forEach(function(el){ obs.observe(el); });
+
+    // Pills secteurs
+    document.querySelectorAll('.secteur-pill').forEach(function(pill){
+      pill.addEventListener('click', function(){ pill.classList.toggle('active'); });
+    });
+
+    // Nav highlight
+    var sections = document.querySelectorAll('section[id]');
+    var navLinks = document.querySelectorAll('nav ul a');
+    window.addEventListener('scroll', function(){
+      var current='';
+      sections.forEach(function(s){ if(window.scrollY>=s.offsetTop-100) current=s.id; });
+      navLinks.forEach(function(link){
+        link.style.color = link.getAttribute('href')==='#'+current ? 'var(--gold)' : '';
+      });
+    });
+
+    // Touche Entrée mot de passe
+    var pw = document.getElementById('admin-password');
+    if (pw) pw.addEventListener('keydown', function(e){ if(e.key==='Enter') checkLogin(); });
+
+    // Initialiser le blog
+    renderBlog();
+  });
+</script>
 </head>
 <body>
 
@@ -1646,221 +1847,5 @@
     <div class="footer-copy">Mentions légales · Politique de confidentialité</div>
   </div>
 </footer>
-
-
-
-
-</script><script>
-  // ═══════════════════════════════════════════════
-  // POLYDEV CONSULTING — Script principal
-  // ═══════════════════════════════════════════════
-
-  // ─── CONFIG SUPABASE ───
-  var SUPABASE_URL = 'https://kcukutvwvecllqneibsm.supabase.co';
-  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtjdWt1dHZ3dmVjbGxxbmVpYnNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTQxMTAsImV4cCI6MjA4ODEzMDExMH0.KOQuxdxTqb-8Yh5NF3xVTjvmw1sfS4zso28ghdpZGAE';
-
-  // ─── ÉTAT GLOBAL ───
-  var isAdmin = false;
-  var editingId = null;
-
-  // ─── SUPABASE API ───
-  async function sbFetch(path, method, body) {
-    var headers = {
-      'apikey': SUPABASE_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_KEY,
-      'Content-Type': 'application/json',
-      'Prefer': method === 'DELETE' ? 'return=minimal' : 'return=representation'
-    };
-    var opts = { method: method || 'GET', headers: headers };
-    if (body) opts.body = JSON.stringify(body);
-    try {
-      var res = await fetch(SUPABASE_URL + '/rest/v1/' + path, opts);
-      if (method === 'DELETE') return true;
-      var text = await res.text();
-      if (!res.ok) { console.error('Supabase error ' + res.status + ':', text); return null; }
-      return text ? JSON.parse(text) : [];
-    } catch(e) { console.error('Fetch error:', e); return null; }
-  }
-
-  async function getArticles() { return await sbFetch('articles?order=created_at.desc', 'GET') || []; }
-  async function insertArticle(art) { return await sbFetch('articles', 'POST', art); }
-  async function updateArticle(id, art) { return await sbFetch('articles?id=eq.' + id, 'PATCH', art); }
-  async function deleteArticleDb(id) { return await sbFetch('articles?id=eq.' + id, 'DELETE'); }
-
-  // ─── COULEURS CATÉGORIES ───
-  var CATEGORY_COLORS = {
-    'Actualité technique': '#4db8ff',
-    'Fiche matériau': '#7ab8c8',
-    "Retour d'expérience": '#8ac87a',
-    'Veille réglementaire': '#c87a7a',
-    'Administration': '#c8a96e'
-  };
-
-  // ─── RENDU BLOG ───
-  async function renderBlog() {
-    var grid = document.getElementById('blog-grid');
-    var empty = document.getElementById('blog-empty');
-    grid.style.display = 'block';
-    grid.innerHTML = '<div style="color:var(--muted);font-family:Space Mono,monospace;font-size:0.75rem;padding:2rem;text-align:center;">Chargement...</div>';
-    var articles = await getArticles();
-    grid.innerHTML = '';
-    if (!articles || !articles.length) {
-      grid.style.display = 'none';
-      empty.style.display = 'block';
-    } else {
-      grid.style.display = 'grid';
-      empty.style.display = 'none';
-      articles.forEach(function(art) {
-        var color = CATEGORY_COLORS[art.category] || 'var(--gold)';
-        var card = document.createElement('div');
-        card.className = 'blog-card';
-        var adminBtns = '';
-        if (isAdmin) {
-          adminBtns = '<button class="blog-delete" onclick="event.stopPropagation();deleteArticle(\'' + art.id + '\')">✕ Supprimer</button>'
-                    + '<button class="blog-delete" style="margin-right:0.5rem;" onclick="event.stopPropagation();editArticle(\'' + art.id + '\')">✎ Modifier</button>';
-        }
-        card.innerHTML = '<div class="blog-card-header"><span class="blog-category" style="border-color:' + color + ';color:' + color + ';">' + art.category + '</span><span class="blog-date">' + art.date + '</span></div><div class="blog-card-body"><div class="blog-card-title">' + art.title + '</div><div class="blog-card-excerpt">' + art.excerpt + '</div></div><div class="blog-card-footer">Lire l'article → ' + adminBtns + '</div>';
-        card.addEventListener('click', (function(a) { return function() { openArticle(a); }; })(art));
-        grid.appendChild(card);
-      });
-    }
-  }
-
-  // ─── ARTICLE MODAL ───
-  function openArticle(art) {
-    document.getElementById('modal-category').textContent = art.category;
-    document.getElementById('modal-title').textContent = art.title;
-    document.getElementById('modal-meta').textContent = 'Publié le ' + art.date;
-    document.getElementById('modal-content').textContent = art.content;
-    document.getElementById('article-modal').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeArticle() {
-    document.getElementById('article-modal').classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  // ─── LOGIN ───
-  function openLogin() {
-    document.getElementById('login-modal').classList.add('open');
-    setTimeout(function() { document.getElementById('admin-password').focus(); }, 100);
-  }
-  function closeLogin() {
-    document.getElementById('login-modal').classList.remove('open');
-    document.getElementById('login-error').classList.remove('show');
-    document.getElementById('admin-password').value = '';
-  }
-  function checkLogin() {
-    var pw = document.getElementById('admin-password').value;
-    if (pw === '3dh27ahJ@bou17!') {
-      isAdmin = true;
-      closeLogin();
-      document.getElementById('admin-bar').style.display = 'flex';
-      document.getElementById('login-btn-wrapper').style.display = 'none';
-      renderBlog();
-    } else {
-      document.getElementById('login-error').classList.add('show');
-    }
-  }
-  function logoutAdmin() {
-    isAdmin = false;
-    document.getElementById('admin-bar').style.display = 'none';
-    document.getElementById('login-btn-wrapper').style.display = 'block';
-    closeEditor();
-    renderBlog();
-  }
-
-  // ─── ÉDITEUR ───
-  function openEditor() {
-    editingId = null;
-    document.getElementById('editor-title-label').textContent = 'Nouvel Article';
-    document.getElementById('art-title').value = '';
-    document.getElementById('art-excerpt').value = '';
-    document.getElementById('art-content').value = '';
-    document.getElementById('art-category').value = 'Actualité technique';
-    document.getElementById('blog-editor').classList.add('open');
-    document.getElementById('blog-editor').scrollIntoView({ behavior: 'smooth' });
-  }
-  function closeEditor() {
-    document.getElementById('blog-editor').classList.remove('open');
-    editingId = null;
-  }
-  async function editArticle(id) {
-    var articles = await getArticles();
-    var art = null;
-    for (var i = 0; i < articles.length; i++) { if (articles[i].id === id) { art = articles[i]; break; } }
-    if (!art) return;
-    editingId = id;
-    document.getElementById('editor-title-label').textContent = "Modifier l'article";
-    document.getElementById('art-title').value = art.title;
-    document.getElementById('art-excerpt').value = art.excerpt || '';
-    document.getElementById('art-content').value = art.content;
-    document.getElementById('art-category').value = art.category;
-    document.getElementById('blog-editor').classList.add('open');
-    document.getElementById('blog-editor').scrollIntoView({ behavior: 'smooth' });
-  }
-  async function publishArticle() {
-    var title = document.getElementById('art-title').value.trim();
-    var excerpt = document.getElementById('art-excerpt').value.trim();
-    var artContent = document.getElementById('art-content').value.trim();
-    var category = document.getElementById('art-category').value;
-    if (!title || !artContent) { alert('Veuillez remplir le titre et le contenu.'); return; }
-    var now = new Date();
-    var date = now.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
-    var art = { title: title, excerpt: excerpt || artContent.substring(0, 120) + '…', content: artContent, category: category, date: date };
-    var btn = document.getElementById('btn-publish');
-    btn.textContent = 'Publication...';
-    btn.disabled = true;
-    if (editingId) {
-      await updateArticle(editingId, art);
-    } else {
-      await insertArticle(art);
-    }
-    btn.textContent = "Publier l'article";
-    btn.disabled = false;
-    closeEditor();
-    await renderBlog();
-  }
-  async function deleteArticle(id) {
-    if (!confirm('Supprimer cet article ?')) return;
-    await deleteArticleDb(id);
-    await renderBlog();
-  }
-
-  // ─── COMPTEUR DE VISITES ───
-  var countEl = document.getElementById('visit-count');
-  var visits = parseInt(localStorage.getItem('polydev_visits') || '0') + 1;
-  localStorage.setItem('polydev_visits', visits);
-  if (countEl) countEl.textContent = visits.toLocaleString('fr-FR');
-
-  // ─── ANIMATIONS SCROLL ───
-  var faders = document.querySelectorAll('.fade-up');
-  faders.forEach(function(el) { el.classList.add('hidden'); });
-  var observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry, i) {
-      if (entry.isIntersecting) {
-        setTimeout(function() { entry.target.classList.remove('hidden'); }, i * 80);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
-  faders.forEach(function(el) { observer.observe(el); });
-
-  // ─── SECTEUR PILLS ───
-  document.querySelectorAll('.secteur-pill').forEach(function(pill) {
-    pill.addEventListener('click', function() { pill.classList.toggle('active'); });
-  });
-
-  // ─── NAV HIGHLIGHT ───
-  var sections = document.querySelectorAll('section[id]');
-  var navLinks = document.querySelectorAll('nav ul a');
-  window.addEventListener('scroll', function() {
-    var current = '';
-    sections.forEach(function(s) { if (window.scrollY >= s.offsetTop - 100) current = s.id; });
-    navLinks.forEach(function(link) {
-      link.style.color = link.getAttribute('href') === '#' + current ? 'var(--gold)' : '';
-    });
-  });
-
-  // ─── ENTER SUR MOT DE PASSE ───
-  var pwField =
+</body>
+</html>
