@@ -51,15 +51,15 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --ink: #1a1f2e;
-      --dark: #212736;
-      --panel: #2a3045;
-      --border: #3a4560;
+      --ink: #252c3d;
+      --dark: #2e3650;
+      --panel: #384260;
+      --border: #4a5878;
       --gold: #4db8ff;
       --gold-light: #80ccff;
-      --silver: #a0b4cc;
-      --text: #dce6f0;
-      --muted: #6a7d96;
+      --silver: #b8ccde;
+      --text: #e8f0f8;
+      --muted: #7a90aa;
       --accent: #0099ff;
     }
 
@@ -119,7 +119,7 @@
 
     nav ul a {
       font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
+      font-size: 0.85rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--silver);
@@ -217,7 +217,7 @@
       color: var(--ink);
       padding: 0.9rem 2rem;
       font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
+      font-size: 0.85rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       text-decoration: none;
@@ -232,7 +232,7 @@
       color: var(--silver);
       padding: 0.9rem 2rem;
       font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
+      font-size: 0.85rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       text-decoration: none;
@@ -390,53 +390,253 @@
       color: var(--silver);
     }
 
-    /* ─── MATÉRIAUX ─── */
+    
+    /* ─── MATÉRIAUX ISO 1629 ─── */
     #materiaux { background: var(--ink); }
 
-    .mat-table {
-      width: 100%;
-      border-collapse: collapse;
+    .mat-group {
+      margin-bottom: 2.5rem;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .mat-group-header {
+      background: var(--panel);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mat-group-code {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      background: rgba(77,184,255,0.1);
+      border: 1px solid var(--gold);
+      padding: 0.2rem 0.7rem;
+      white-space: nowrap;
+    }
+
+    .mat-group-name {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      color: var(--silver);
+      text-transform: uppercase;
+    }
+
+    .mat-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+
+    .mat-item {
+      background: transparent;
+      border: none;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+      text-align: left;
+    }
+
+    .mat-item:hover { background: rgba(77,184,255,0.06); border-color: var(--gold); }
+    .mat-item:hover .mat-arrow { color: var(--gold); transform: translateX(4px); }
+
+    .mat-code {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      min-width: 90px;
+    }
+
+    .mat-label {
+      font-size: 0.82rem;
+      color: var(--silver);
+      flex: 1;
+    }
+
+    .mat-arrow {
       font-family: 'Space Mono', monospace;
       font-size: 0.75rem;
+      color: var(--muted);
+      transition: color 0.2s, transform 0.2s;
     }
 
-    .mat-table thead tr {
-      border-bottom: 1px solid var(--gold);
+    /* ─── MODAL FICHE ─── */
+    .mat-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: rgba(0,0,0,0.88);
+      backdrop-filter: blur(8px);
+      overflow-y: auto;
+      padding: 2rem 1rem;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .mat-modal.open { display: flex; }
+
+    .mat-modal-inner {
+      background: var(--dark);
+      border: 1px solid var(--border);
+      max-width: 960px;
+      width: 100%;
+      position: relative;
     }
 
-    .mat-table th {
-      text-align: left;
-      padding: 1rem 1.5rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--gold);
+    .mat-modal-close {
+      position: fixed;
+      top: 1.5rem; right: 1.5rem;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--silver);
+      font-family: "Space Mono", monospace;
       font-size: 0.65rem;
+      padding: 0.4rem 0.8rem;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+      z-index: 10;
     }
+    .mat-modal-close:hover { border-color: var(--gold); color: var(--gold); }
 
-    .mat-table tbody tr {
+    /* EN-TÊTE */
+    .mat-modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 2rem;
+      padding: 2rem 2rem 1.5rem;
       border-bottom: 1px solid var(--border);
-      transition: background 0.2s;
+      background: var(--panel);
     }
 
-    .mat-table tbody tr:hover { background: var(--panel); }
+    .mat-modal-header-left { display: flex; flex-direction: column; gap: 0.5rem; }
 
-    .mat-table td {
-      padding: 1.1rem 1.5rem;
+    .mat-modal-group {
+      font-family: "Space Mono", monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 0.2rem 0.6rem;
+      display: inline-block;
+    }
+
+    .mat-modal-code {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 3.5rem;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .mat-modal-fullname {
+      font-size: 0.85rem;
       color: var(--silver);
       line-height: 1.5;
     }
 
-    .mat-table td:first-child { color: var(--text); font-weight: 700; }
-
-    .badge {
-      display: inline-block;
-      padding: 0.2rem 0.6rem;
-      font-size: 0.6rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      border: 1px solid var(--gold);
-      color: var(--gold);
+    .mat-modal-header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1rem;
+      padding-right: 3rem;
     }
+
+    .mat-fiche-expertise {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-family: "Space Mono", monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .mat-fiche-norms-block { text-align: right; }
+
+    /* GRILLE 5 RUBRIQUES */
+    .mat-modal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    .mat-fiche-section {
+      padding: 1.5rem 2rem;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mat-fiche-section:nth-child(even) { border-right: none; }
+
+    .mat-fiche-section--full {
+      grid-column: 1 / -1;
+      border-right: none;
+      border-bottom: none;
+      background: rgba(77,184,255,0.03);
+    }
+
+    .mat-fiche-section-num {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.8rem;
+      color: rgba(77,184,255,0.2);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+
+    .mat-fiche-section-title {
+      font-family: "Space Mono", monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mat-fiche-section-body {
+      font-size: 0.82rem;
+      color: var(--text);
+      line-height: 1.8;
+    }
+
+    .mat-fiche-label {
+      font-family: "Space Mono", monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.3rem;
+    }
+
+    .mat-fiche-val {
+      font-size: 0.82rem;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 700px) {
+      .mat-modal-header { flex-direction: column; }
+      .mat-modal-header-right { align-items: flex-start; padding-right: 0; }
+      .mat-modal-grid { grid-template-columns: 1fr; }
+      .mat-fiche-section { border-right: none; }
+    }
+
 
     /* ─── PROCESSUS ─── */
     #processus { background: var(--dark); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
@@ -499,7 +699,7 @@
       padding: 0.7rem 1.4rem;
       border: 1px solid var(--border);
       font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
+      font-size: 0.85rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--silver);
@@ -774,7 +974,7 @@
       border: 1px solid var(--border);
       color: var(--silver);
       font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
+      font-size: 0.85rem;
       padding: 0.4rem 0.8rem;
       cursor: pointer;
       transition: border-color 0.2s, color 0.2s;
@@ -879,7 +1079,7 @@
       color: var(--ink);
       padding: 0.8rem 2rem;
       font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
+      font-size: 0.85rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       font-weight: 700;
@@ -894,7 +1094,7 @@
       color: var(--silver);
       padding: 0.8rem 2rem;
       font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
+      font-size: 0.85rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       border: 1px solid var(--border);
@@ -1025,7 +1225,7 @@
       var txt = await res.text();
       if (!res.ok) { console.error('Supabase ' + res.status, txt); return null; }
       return txt ? JSON.parse(txt) : [];
-    } catch(e) { console.error('Fetch:', e); return null; }
+    } catch(e) { console.warn('Supabase indisponible:', e.message); return null; }
   }
   async function getArticles() { return (await sbFetch('articles?order=created_at.desc','GET')) || []; }
   async function insertArticle(a) { return sbFetch('articles','POST',a); }
@@ -1046,7 +1246,7 @@
     grid.innerHTML = '<div style="color:var(--muted);font-family:monospace;font-size:0.75rem;padding:2rem;text-align:center;">Chargement...</div>';
     var articles = await getArticles();
     grid.innerHTML = '';
-    if (!articles.length) { grid.style.display='none'; empty.style.display='block'; return; }
+    if (!articles || !articles.length) { grid.style.display='none'; empty.style.display='block'; return; }
     grid.style.display = 'grid'; empty.style.display = 'none';
     articles.forEach(function(art) {
       var c = CAT_COLORS[art.category] || '#4db8ff';
@@ -1153,6 +1353,43 @@
     await deleteArticleDb(id); await renderBlog();
   }
 
+
+  // ─── SVG MOLÉCULAIRES ───
+
+
+  // ─── BASE DE DONNÉES MATÉRIAUX ───
+  var MAT_DATA = null;
+  function getMatData() {
+    if (!MAT_DATA) MAT_DATA = JSON.parse(document.getElementById('mat-json-data').textContent);
+    return MAT_DATA;
+  }
+
+  function openMatModal(code) {
+    var d = getMatData()[code];
+    if (!d) return;
+    document.getElementById('mm-group').textContent = d.group;
+    document.getElementById('mm-code').textContent = d.code;
+    document.getElementById('mm-fullname').textContent = d.fullname;
+    document.getElementById('mm-chimie').innerHTML = d.chimie;
+    document.getElementById('mm-mecanique').innerHTML = d.mecanique;
+    document.getElementById('mm-thermique').innerHTML = d.thermique;
+    document.getElementById('mm-chimique').innerHTML = d.chimique;
+    document.getElementById('mm-usages').innerHTML = d.usages;
+    document.getElementById('mat-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMatModal() {
+    document.getElementById('mat-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  // Fermer au clic sur le fond - déplacé dans DOMContentLoaded
+  function initMatModal() {
+    var modal = document.getElementById('mat-modal');
+    if (modal) modal.addEventListener('click', function(e) {
+      if (e.target === this) closeMatModal();
+    });
+  }
+
   // ─── INIT AU CHARGEMENT ───
   window.addEventListener('DOMContentLoaded', function() {
     // Forcer le scroll en haut au chargement
@@ -1227,10 +1464,15 @@
       });
     }
 
+    // Init modal matériaux
+    initMatModal();
+
     // Initialiser le blog
     renderBlog();
   });
 </script>
+
+  <script type="application/json" id="mat-json-data">{"NR": {"code": "NR", "fullname": "Caoutchouc Naturel", "group": "Groupe R — Diéniques", "chimie": "Polymère naturel biosourcé extrait de l'Hevea brasiliensis (latex). Composé de cis-1,4-polyisoprène à très haute masse moléculaire (Mn > 500 000 g/mol). Contient des protéines, lipides et résines naturels influençant ses propriétés. Vulcanisation au soufre principalement.", "mecanique": "<b>Dureté :</b> 30 à 80 Shore A<br><b>Résistance à la traction :</b> 20 à 30 MPa<br><b>Allongement à la rupture :</b> 500 à 800 %<br><b>Module à 100% :</b> 0,5 à 3 MPa<br><b>Résistance à la déchirure :</b> très élevée<br><b>Rebond élastique :</b> excellent (> 70 %)<br><b>Résistance à l'abrasion :</b> excellente", "thermique": "<b>Plage d'utilisation :</b> -50°C / +80°C<br><b>Tg :</b> -70°C<br><b>Conductivité thermique :</b> 0,13 W/m·K<br><b>Cristallisation sous contrainte :</b> oui (auto-renforcement)<br><b>Résistance à la chaleur :</b> limitée (oxydation > 80°C)<br><b>Imimperméabilité aux gaz :</b> moyenne", "chimique": "<b>Huiles et graisses :</b> mauvaise résistance<br><b>Acides dilués :</b> bonne résistance<br><b>Acides concentrés :</b> mauvaise résistance<br><b>Ozone :</b> sensible (protection par antiozonants)<br><b>UV / Intempéries :</b> sensible<br><b>Vieillissement thermique :</b> modéré", "usages": "<b>Avantages :</b> propriétés mécaniques et dynamiques exceptionnelles, cristallisation sous contrainte, faible hystérésis, excellente adhésion au métal.<br><b>Limites :</b> mauvaise résistance aux huiles, aux solvants et à l'ozone, vieillissement thermique limité, allergènes protéiques possibles.<br><b>Usages :</b> pneumatiques poids lourds, supports antivibratoires, courroies transporteuses, gants médicaux, joints, appareils médicaux."}, "IR": {"code": "IR", "fullname": "Polyisoprène Synthétique", "group": "Groupe R — Diéniques", "chimie": "Équivalent synthétique du caoutchouc naturel, composé de cis-1,4-polyisoprène obtenu par polymérisation anionique ou Ziegler-Natta. Grande pureté chimique (absence de protéines). Masse moléculaire contrôlée et reproductible.", "mecanique": "<b>Dureté :</b> 30 à 80 Shore A<br><b>Résistance à la traction :</b> 15 à 25 MPa<br><b>Allongement à la rupture :</b> 500 à 750 %<br><b>Module à 100% :</b> 0,5 à 2,5 MPa<br><b>Résistance à la déchirure :</b> élevée<br><b>Rebond élastique :</b> excellent", "thermique": "<b>Plage d'utilisation :</b> -50°C / +80°C<br><b>Tg :</b> -70°C<br><b>Conductivité thermique :</b> 0,13 W/m·K<br><b>Cristallisation sous contrainte :</b> oui (moindre que NR)<br><b>Résistance à la chaleur :</b> limitée<br><b>Imimperméabilité aux gaz :</b> moyenne", "chimique": "<b>Huiles et graisses :</b> mauvaise résistance<br><b>Acides dilués :</b> bonne résistance<br><b>Ozone :</b> sensible<br><b>UV / Intempéries :</b> sensible<br><b>Vieillissement thermique :</b> modéré<br><b>Absence d'allergènes protéiques</b>", "usages": "<b>Avantages :</b> pureté chimique élevée, reproductibilité lot à lot, absence d'allergènes, biocompatible.<br><b>Limites :</b> propriétés mécaniques légèrement inférieures au NR, coût supérieur, même sensibilité aux huiles et à l'ozone.<br><b>Usages :</b> articles médicaux (seringues, cathéters), gants chirurgicaux, adhésifs haute performance, pièces techniques de précision."}, "SBR": {"code": "SBR", "fullname": "Caoutchouc Styrène-Butadiène", "group": "Groupe R — Diéniques", "chimie": "Copolymère statistique de styrène (15-30%) et de butadiène (70-85%), obtenu par polymérisation en émulsion (ESBR) ou en solution (SSBR). Le taux de styrène influence dureté, hystérésis et résistance à l'abrasion. Nécessite renforcement par noir de carbone.", "mecanique": "<b>Dureté :</b> 40 à 80 Shore A<br><b>Résistance à la traction :</b> 15 à 25 MPa (avec renfort)<br><b>Allongement à la rupture :</b> 400 à 600 %<br><b>Résistance à l'abrasion :</b> très bonne<br><b>Rebond élastique :</b> moyen<br><b>Hystérésis :</b> plus élevée que NR", "thermique": "<b>Plage d'utilisation :</b> -50°C / +100°C<br><b>Tg :</b> -55°C (variable selon taux styrène)<br><b>Résistance à la chaleur :</b> modérée<br><b>Imimperméabilité aux gaz :</b> moyenne<br><b>Conductivité thermique :</b> 0,19 W/m·K", "chimique": "<b>Huiles et graisses :</b> mauvaise résistance<br><b>Acides dilués :</b> bonne résistance<br><b>Ozone :</b> sensible<br><b>UV / Intempéries :</b> sensible<br><b>Vieillissement thermique :</b> modéré<br><b>Solvants aromatiques :</b> mauvaise résistance", "usages": "<b>Avantages :</b> excellente résistance à l'abrasion, bon compromis coût/performance, grande disponibilité, bonne processabilité.<br><b>Limites :</b> mauvaise résistance aux huiles et solvants, hystérésis élevée, nécessite renforcement.<br><b>Usages :</b> pneumatiques tourisme (bande de roulement), semelles de chaussures, courroies, joints pour eau, revêtements de sols."}, "BR": {"code": "BR", "fullname": "Polybutadiène", "group": "Groupe R — Diéniques", "chimie": "Homopolymère du butadiène, produit par polymérisation Ziegler-Natta ou catalyse au lithium. Riche en unités cis-1,4 (> 96% pour les grades haute performance). Très faible Tg liée à la grande flexibilité de la chaîne polymérique sans groupe latéral encombrant.", "mecanique": "<b>Dureté :</b> 40 à 70 Shore A<br><b>Résistance à la traction :</b> 10 à 18 MPa (avec renfort)<br><b>Allongement à la rupture :</b> 400 à 600 %<br><b>Résistance à l'abrasion :</b> excellente (meilleure des élastomères courants)<br><b>Rebond élastique :</b> très élevé (> 70%)<br><b>Hystérésis :</b> très faible", "thermique": "<b>Plage d'utilisation :</b> -100°C / +100°C<br><b>Tg :</b> -100°C<br><b>Résistance à la chaleur :</b> modérée<br><b>Imimperméabilité aux gaz :</b> moyenne<br><b>Échauffement en fatigue dynamique :</b> très faible", "chimique": "<b>Huiles et graisses :</b> mauvaise résistance<br><b>Acides dilués :</b> bonne résistance<br><b>Ozone :</b> sensible<br><b>UV / Intempéries :</b> sensible<br><b>Vieillissement thermique :</b> modéré", "usages": "<b>Avantages :</b> flexibilité à très basse température remarquable, faible hystérésis (économie de carburant), résistance à l'abrasion exceptionnelle.<br><b>Limites :</b> utilisé principalement en mélange (peu de mise en oeuvre pur), mauvaise résistance aux huiles, faible résistance à la déchirure seul.<br><b>Usages :</b> pneumatiques (mélange NR/SBR/BR), balles de golf, revêtements anti-abrasion, supports antivibratoires, semelles."}, "NBR": {"code": "NBR", "fullname": "Caoutchouc Nitrile Butadiène", "group": "Groupe R — Diéniques", "chimie": "Copolymère d'acrylonitrile (ACN) et de butadiène. Le taux d'ACN (18 à 50%) gouverne les propriétés : plus le taux est élevé, meilleure est la résistance aux huiles mais plus la Tg augmente (moins bonne tenue au froid). Grades courants : 28%, 33%, 40% ACN.", "mecanique": "<b>Dureté :</b> 40 à 90 Shore A<br><b>Résistance à la traction :</b> 10 à 25 MPa<br><b>Allongement à la rupture :</b> 300 à 600 %<br><b>Résistance à l'abrasion :</b> bonne<br><b>Résistance à la compression :</b> bonne<br><b>Rebond élastique :</b> moyen", "thermique": "<b>Plage d'utilisation :</b> -40°C / +120°C (selon taux ACN)<br><b>Tg :</b> -50°C à -20°C (selon taux ACN)<br><b>Résistance à la chaleur :</b> moyenne<br><b>Imimperméabilité aux gaz :</b> bonne à très bonne<br><b>Conductivité thermique :</b> 0,19 W/m·K", "chimique": "<b>Huiles minérales et carburants :</b> excellente résistance<br><b>Acides dilués :</b> bonne résistance<br><b>Ozone :</b> sensible<br><b>Solvants aromatiques :</b> résistance limitée<br><b>Fluides polaires (eau, alcools) :</b> bonne résistance<br><b>Vieillissement thermique :</b> moyen", "usages": "<b>Avantages :</b> référence pour la résistance aux huiles, grande gamme de dureté, bon rapport coût/performance, bonne résistance à l'abrasion.<br><b>Limites :</b> sensible à l'ozone, résistance thermique limitée, non adapté aux solvants aromatiques et cétones.<br><b>Usages :</b> joints d'étanchéité huile moteur, durites carburant, garnitures de pompes, joints hydrauliques, industrie pétrolière."}, "HNBR": {"code": "HNBR", "fullname": "Caoutchouc Nitrile Hydrogéné", "group": "Groupe R — Diéniques", "chimie": "NBR hydrogéné par catalyse (Pd ou Rh) : saturation partielle ou totale des doubles liaisons du squelette butadiène. Le taux d'hydrogénation (90 à 99,5%) conditionne la résistance thermique et chimique. Conserve les groupes nitrile pour la résistance aux huiles.", "mecanique": "<b>Dureté :</b> 50 à 90 Shore A<br><b>Résistance à la traction :</b> 20 à 30 MPa<br><b>Allongement à la rupture :</b> 200 à 450 %<br><b>Résistance à l'abrasion :</b> excellente<br><b>Résistance à la fatigue dynamique :</b> très bonne<br><b>Résistance à la déchirure :</b> élevée", "thermique": "<b>Plage d'utilisation :</b> -40°C / +165°C<br><b>Tg :</b> -30°C à -10°C<br><b>Résistance à la chaleur :</b> excellente<br><b>Imimperméabilité aux gaz :</b> bonne<br><b>Stabilité thermique :</b> nettement supérieure au NBR", "chimique": "<b>Huiles minérales :</b> excellente résistance<br><b>H2S et fluides de forage :</b> très bonne résistance<br><b>Ozone :</b> très bonne résistance<br><b>Acides :</b> bonne résistance<br><b>Réfrigérants HFC :</b> bonne résistance<br><b>Vieillissement thermique :</b> excellent", "usages": "<b>Avantages :</b> combine résistance aux huiles du NBR et tenue thermique élevée, excellente durabilité en fatigue dynamique, résistance à l'ozone.<br><b>Limites :</b> coût élevé, Tg plus haute que NBR (moins bon à froid), traitement plus complexe.<br><b>Usages :</b> courroies de distribution, joints pour fluides de forage, industrie pétrolière offshore, compresseurs de réfrigération."}, "XNBR": {"code": "XNBR", "fullname": "Caoutchouc Nitrile Carboxylé", "group": "Groupe R — Diéniques", "chimie": "NBR modifié par introduction de groupes acide acrylique ou méthacrylique (2 à 10%) sur la chaîne principale. Les fonctions carboxyliques permettent des réticulations ioniques supplémentaires et une forte adhésion aux substrats métalliques et textiles.", "mecanique": "<b>Dureté :</b> 50 à 90 Shore A<br><b>Résistance à la traction :</b> 15 à 28 MPa<br><b>Allongement à la rupture :</b> 300 à 500 %<br><b>Module élevé :</b> oui (supérieur au NBR)<br><b>Résistance à l'abrasion :</b> très élevée<br><b>Adhérence textile/métal :</b> excellente", "thermique": "<b>Plage d'utilisation :</b> -30°C / +120°C<br><b>Tg :</b> -20°C à -10°C<br><b>Résistance à la chaleur :</b> moyenne<br><b>Imimperméabilité aux gaz :</b> bonne", "chimique": "<b>Huiles minérales :</b> excellente résistance<br><b>Acides dilués :</b> bonne résistance<br><b>Ozone :</b> sensible<br><b>Bases :</b> résistance modérée (groupes COOH réactifs)<br><b>Vieillissement thermique :</b> moyen", "usages": "<b>Avantages :</b> adhésion exceptionnelle aux métaux et textiles, dureté et module élevés, très bonne résistance à l'abrasion.<br><b>Limites :</b> sensible aux bases fortes, Tg élevée, coût supérieur au NBR, sensible à l'hydrolyse en milieu basique.<br><b>Usages :</b> revêtements de rouleaux industriels, courroies crantées, adhésifs techniques, gants de protection, applications métal-caoutchouc."}, "CR": {"code": "CR", "fullname": "Polychloroprène (Néoprène)", "group": "Groupe R — Diéniques", "chimie": "Homopolymère du chloroprène (2-chlorobutadiène-1,3), obtenu par polymérisation en émulsion. La présence de l'atome de chlore en position allylique confère une résistance intrinsèque à l'ozone et au feu. Vulcanisation aux oxydes métalliques (ZnO/MgO) ou au soufre.", "mecanique": "<b>Dureté :</b> 30 à 90 Shore A<br><b>Résistance à la traction :</b> 15 à 25 MPa<br><b>Allongement à la rupture :</b> 300 à 600 %<br><b>Cristallisation sous contrainte :</b> oui<br><b>Résistance à la déchirure :</b> bonne<br><b>Rebond élastique :</b> moyen", "thermique": "<b>Plage d'utilisation :</b> -40°C / +120°C<br><b>Tg :</b> -45°C<br><b>Résistance à la chaleur :</b> bonne<br><b>Comportement au feu :</b> auto-extinguible<br><b>Imimperméabilité aux gaz :</b> moyenne", "chimique": "<b>Huiles et graisses :</b> résistance modérée<br><b>Ozone :</b> très bonne résistance<br><b>UV / Intempéries :</b> très bonne résistance<br><b>Acides dilués :</b> bonne résistance<br><b>Solvants aromatiques :</b> résistance limitée<br><b>Vieillissement thermique :</b> bon", "usages": "<b>Avantages :</b> excellente résistance à l'ozone et aux intempéries, auto-extinguible, bon équilibre de propriétés, résistance aux graisses acceptable.<br><b>Limites :</b> résistance aux huiles inférieure au NBR, coût modéré, cristallise à basse température.<br><b>Usages :</b> gaines de câbles, courroies, joints de génie civil, combinaisons de plongée, équipements ATEX, ferroviaire."}, "IIR": {"code": "IIR", "fullname": "Caoutchouc Butyle", "group": "Groupe R — Diéniques", "chimie": "Copolymère d'isobutylène (95-99%) et d'isoprène (1-5%), obtenu par polymérisation cationique à basse température (-100°C). La quasi-absence de doubles liaisons dans la chaîne principale explique l'imperméabilité aux gaz et la résistance à l'ozone. Vulcanisation au soufre via les rares unités isoprène.", "mecanique": "<b>Dureté :</b> 40 à 80 Shore A<br><b>Résistance à la traction :</b> 10 à 20 MPa<br><b>Allongement à la rupture :</b> 400 à 700 %<br><b>Rebond élastique :</b> très faible (< 20%)<br><b>Amortissement vibratoire :</b> excellent<br><b>Résistance à la fatigue :</b> bonne", "thermique": "<b>Plage d'utilisation :</b> -45°C / +130°C<br><b>Tg :</b> -65°C<br><b>Résistance à la chaleur :</b> moyenne<br><b>Imimperméabilité aux gaz :</b> excellente (la plus faible des élastomères courants)<br><b>Conductivité thermique :</b> 0,13 W/m·K", "chimique": "<b>Huiles et graisses :</b> mauvaise résistance<br><b>Ozone :</b> excellente résistance<br><b>Acides et bases dilués :</b> très bonne résistance<br><b>Solvants polaires :</b> bonne résistance<br><b>Solvants aliphatiques :</b> gonflement modéré<br><b>Vieillissement thermique :</b> moyen", "usages": "<b>Avantages :</b> imperméabilité aux gaz exceptionnelle, excellent amortissement vibratoire, résistance à l'ozone et aux acides.<br><b>Limites :</b> mauvaise résistance aux huiles, faible rebond, difficulté de co-vulcanisation avec NR/SBR non halogéné.<br><b>Usages :</b> chambres à air, membranes de couverture, bouchons pharmaceutiques, isolation vibratoire."}, "BIIR": {"code": "BIIR", "fullname": "Caoutchouc Butyle Bromé", "group": "Groupe R — Diéniques", "chimie": "IIR halogéné par bromation (1,5 à 2,5% Br en masse). Le brome est introduit en position allylique sur les unités isoprène, créant des sites de vulcanisation réactifs. Permet la co-vulcanisation avec NR et SBR. Cinétique de vulcanisation accélérée par rapport à IIR.", "mecanique": "<b>Dureté :</b> 40 à 80 Shore A<br><b>Résistance à la traction :</b> 10 à 20 MPa<br><b>Allongement à la rupture :</b> 400 à 650 %<br><b>Rebond élastique :</b> très faible<br><b>Amortissement vibratoire :</b> excellent<br><b>Résistance à la fatigue :</b> bonne", "thermique": "<b>Plage d'utilisation :</b> -45°C / +130°C<br><b>Tg :</b> -65°C<br><b>Résistance à la chaleur :</b> moyenne à bonne<br><b>Imimperméabilité aux gaz :</b> excellente<br><b>Stabilité thermique :</b> légèrement supérieure à IIR", "chimique": "<b>Huiles et graisses :</b> mauvaise résistance<br><b>Ozone :</b> excellente résistance<br><b>Acides dilués :</b> très bonne résistance<br><b>Co-vulcanisation NR/SBR :</b> possible<br><b>Vieillissement thermique :</b> moyen à bon", "usages": "<b>Avantages :</b> co-vulcanisation facile avec NR et SBR, meilleure adhésion aux mélanges conventionnels, imperméabilité conservée.<br><b>Limites :</b> mauvaise résistance aux huiles, coût supérieur à IIR, manipulation du brome en production.<br><b>Usages :</b> revêtements intérieurs de pneumatiques tubeless, flancs de pneus, bouchons pharmaceutiques, courroies de transmission."}, "CIIR": {"code": "CIIR", "fullname": "Caoutchouc Butyle Chloré", "group": "Groupe R — Diéniques", "chimie": "IIR halogéné par chloration (1 à 1,5% Cl en masse). Le chlore est introduit en position allylique de manière similaire au BIIR. La cinétique de vulcanisation et la réactivité diffèrent légèrement du BIIR. Plus stable thermiquement que BIIR.", "mecanique": "<b>Dureté :</b> 40 à 80 Shore A<br><b>Résistance à la traction :</b> 10 à 20 MPa<br><b>Allongement à la rupture :</b> 400 à 650 %<br><b>Rebond élastique :</b> très faible<br><b>Amortissement vibratoire :</b> excellent<br><b>Résistance à la fatigue :</b> bonne", "thermique": "<b>Plage d'utilisation :</b> -45°C / +130°C<br><b>Tg :</b> -65°C<br><b>Résistance à la chaleur :</b> bonne<br><b>Imimperméabilité aux gaz :</b> excellente<br><b>Stabilité thermique :</b> légèrement supérieure au BIIR", "chimique": "<b>Huiles et graisses :</b> mauvaise résistance<br><b>Ozone :</b> excellente résistance<br><b>Acides dilués :</b> très bonne résistance<br><b>Co-vulcanisation :</b> possible avec NR/SBR<br><b>Vieillissement thermique :</b> bon", "usages": "<b>Avantages :</b> bonne stabilité thermique, co-vulcanisation possible, imperméabilité aux gaz excellente, résistance chimique.<br><b>Limites :</b> mauvaise résistance aux huiles, coût élevé, disponibilité plus restreinte que BIIR.<br><b>Usages :</b> bouchons de flacons pharmaceutiques, revêtements intérieurs de pneumatiques, membranes techniques, articles d'étanchéité spéciaux."}, "EPDM": {"code": "EPDM", "fullname": "Éthylène-Propylène-Diène Monomère", "group": "Groupe M — Saturés", "chimie": "Terpolymère d'éthylène (45-75%), de propylène (25-50%) et d'un diène tertiaire (ENB, DCPD ou HD, 1-9%). La chaîne principale est entièrement saturée, le diène étant en position latérale pour permettre la vulcanisation au soufre. Ratio E/P et type de diène déterminent les propriétés.", "mecanique": "<b>Dureté :</b> 30 à 90 Shore A<br><b>Résistance à la traction :</b> 7 à 20 MPa<br><b>Allongement à la rupture :</b> 300 à 600 %<br><b>Résistance à la compression :</b> bonne<br><b>Rebond élastique :</b> bon<br><b>Résistance à la fatigue :</b> bonne", "thermique": "<b>Plage d'utilisation :</b> -45°C / +135°C<br><b>Tg :</b> -55°C<br><b>Résistance à la vapeur :</b> très bonne (jusqu'à 150°C)<br><b>Imimperméabilité aux gaz :</b> moyenne<br><b>Conductivité thermique :</b> 0,25 W/m·K", "chimique": "<b>Huiles et graisses :</b> mauvaise résistance (incompatible)<br><b>Ozone :</b> excellente résistance<br><b>UV / Intempéries :</b> excellente résistance<br><b>Acides et bases dilués :</b> très bonne résistance<br><b>Fluides polaires et eau :</b> excellente résistance<br><b>Vieillissement thermique :</b> bon", "usages": "<b>Avantages :</b> résistance exceptionnelle à l'ozone, UV et intempéries, compatible eau et vapeur, large gamme de dureté, bon isolant électrique.<br><b>Limites :</b> incompatible avec huiles et carburants, co-vulcanisation difficile avec NR/NBR non halogénés.<br><b>Usages :</b> joints de façades et vitrages, toitures, durites radiateur, profils d'étanchéité BTP, joints ferroviaires, câbles."}, "EPM": {"code": "EPM", "fullname": "Caoutchouc Éthylène-Propylène", "group": "Groupe M — Saturés", "chimie": "Copolymère d'éthylène et de propylène uniquement, sans diène tertiaire. Chaîne entièrement saturée ne pouvant être vulcanisée qu'au peroxyde. Absence totale de doubles liaisons dans la chaîne principale. Ratio E/P généralement 50/50 à 70/30.", "mecanique": "<b>Dureté :</b> 30 à 90 Shore A<br><b>Résistance à la traction :</b> 7 à 18 MPa<br><b>Allongement à la rupture :</b> 300 à 500 %<br><b>Résistance à la compression :</b> bonne<br><b>Rebond élastique :</b> bon", "thermique": "<b>Plage d'utilisation :</b> -50°C / +130°C<br><b>Tg :</b> -60°C<br><b>Résistance à la chaleur :</b> bonne<br><b>Imimperméabilité aux gaz :</b> moyenne<br><b>Stabilité thermique :</b> très bonne", "chimique": "<b>Huiles et graisses :</b> mauvaise résistance<br><b>Ozone :</b> excellente résistance<br><b>UV / Intempéries :</b> excellente résistance<br><b>Acides et bases :</b> très bonne résistance<br><b>Solvants polaires :</b> bonne résistance<br><b>Vieillissement thermique :</b> très bon", "usages": "<b>Avantages :</b> résistance à l'ozone et aux intempéries excellente, vulcanisation peroxydique propre (sans soufre), bonne stabilité thermique.<br><b>Limites :</b> uniquement vulcanisable au peroxyde, mauvaise résistance aux huiles, co-vulcanisation impossible avec diéniques.<br><b>Usages :</b> applications nécessitant compatibilité peroxydique, revêtements de câbles, articles d'étanchéité eau, isolation électrique."}, "ACM": {"code": "ACM", "fullname": "Caoutchouc Polyacrylate", "group": "Groupe M — Saturés", "chimie": "Copolymère d'acrylate d'éthyle ou de butyle avec un monomère de réticulation (chlorure de vinyle, époxy ou carboxylate). La chaîne principale ne contient pas de doubles liaisons. Les groupes ester latéraux assurent la résistance aux huiles. Vulcanisation par amines ou savons.", "mecanique": "<b>Dureté :</b> 40 à 90 Shore A<br><b>Résistance à la traction :</b> 7 à 15 MPa<br><b>Allongement à la rupture :</b> 200 à 400 %<br><b>Résistance à la compression :</b> bonne<br><b>Flexibilité à froid :</b> limitée<br><b>Résistance à la fatigue :</b> moyenne", "thermique": "<b>Plage d'utilisation :</b> -20°C / +175°C<br><b>Tg :</b> -15°C à -5°C<br><b>Résistance à la chaleur :</b> très bonne<br><b>Imimperméabilité aux gaz :</b> bonne<br><b>Résistance à la vapeur :</b> limitée", "chimique": "<b>Huiles ATF et de transmission :</b> excellente résistance<br><b>Huiles minérales haute température :</b> très bonne résistance<br><b>Ozone :</b> très bonne résistance<br><b>Eau et vapeur :</b> résistance limitée<br><b>Acides forts :</b> mauvaise résistance<br><b>Vieillissement thermique :</b> excellent", "usages": "<b>Avantages :</b> résistance aux huiles ATF à haute température, résistance à l'ozone, bonne durabilité thermique long terme.<br><b>Limites :</b> mauvaise tenue à l'eau, flexibilité à froid limitée, résistance mécanique modeste.<br><b>Usages :</b> joints de boîtes de vitesses automatiques, joints de transmission, systèmes de direction assistée, applications haute température avec huiles."}, "AEM": {"code": "AEM", "fullname": "Éthylène-Acrylate (Vamac)", "group": "Groupe M — Saturés", "chimie": "Copolymère d'éthylène et d'acrylate de méthyle avec un monomère acide pour la réticulation. La présence d'éthylène abaisse la Tg par rapport à ACM. Vulcanisation par amines ou peroxyde selon le grade. Marque commerciale principale : Vamac (DuPont).", "mecanique": "<b>Dureté :</b> 40 à 80 Shore A<br><b>Résistance à la traction :</b> 8 à 16 MPa<br><b>Allongement à la rupture :</b> 200 à 500 %<br><b>Résistance à la compression :</b> bonne<br><b>Flexibilité à froid :</b> meilleure que ACM<br><b>Résistance à la fatigue :</b> bonne", "thermique": "<b>Plage d'utilisation :</b> -35°C / +175°C<br><b>Tg :</b> -35°C<br><b>Résistance à la chaleur :</b> très bonne<br><b>Imimperméabilité aux gaz :</b> bonne<br><b>Résistance à la vapeur :</b> limitée", "chimique": "<b>Huiles moteur haute température :</b> excellente résistance<br><b>Gaz d'échappement (EGR) :</b> très bonne résistance<br><b>Ozone :</b> très bonne résistance<br><b>Eau et vapeur :</b> résistance limitée<br><b>Carburants :</b> résistance modérée<br><b>Vieillissement thermique :</b> excellent", "usages": "<b>Avantages :</b> résistance aux huiles moteur à haute température, meilleure flexibilité à froid que ACM, résistance aux gaz d'échappement.<br><b>Limites :</b> mauvaise résistance à l'eau et à la vapeur, résistance aux carburants modérée, coût élevé.<br><b>Usages :</b> joints de moteur post-traitement des gaz, durites turbocompresseur, joints de vilebrequin, systèmes EGR."}, "CSM": {"code": "CSM", "fullname": "Caoutchouc Chlorosulfonyl-Polyéthylène (Hypalon)", "group": "Groupe M — Saturés", "chimie": "Polyéthylène chlorosulfoné : chaîne polyéthylène avec groupes chlore (25-45%) et chlorosulfonyle (1-1,5%) introduits par réaction avec Cl2 et SO2Cl2. La saturation de la chaîne principale assure la résistance à l'ozone. Vulcanisation par oxydes métalliques ou amines. Marque : Hypalon (DuPont).", "mecanique": "<b>Dureté :</b> 40 à 90 Shore A<br><b>Résistance à la traction :</b> 10 à 20 MPa<br><b>Allongement à la rupture :</b> 200 à 450 %<br><b>Résistance à l'abrasion :</b> bonne<br><b>Résistance à la déchirure :</b> bonne<br><b>Rebond élastique :</b> moyen", "thermique": "<b>Plage d'utilisation :</b> -40°C / +135°C<br><b>Tg :</b> -20°C<br><b>Comportement au feu :</b> auto-extinguible<br><b>Résistance à la chaleur :</b> bonne<br><b>Imimperméabilité aux gaz :</b> bonne", "chimique": "<b>Acides concentrés (H2SO4, HNO3) :</b> excellente résistance<br><b>Oxydants forts :</b> très bonne résistance<br><b>Ozone et UV :</b> excellente résistance<br><b>Huiles minérales :</b> résistance modérée<br><b>Solvants aromatiques :</b> résistance limitée<br><b>Vieillissement thermique :</b> bon", "usages": "<b>Avantages :</b> résistance aux acides concentrés et aux oxydants forts, auto-extinguible, excellente résistance à l'ozone et UV, bonne colorabilité.<br><b>Limites :</b> production discontinuée (remplacement par EPDM ou CSM alternatifs), résistance aux huiles limitée.<br><b>Usages :</b> revêtements de réservoirs chimiques, câbles spéciaux, protections chimiques, articles gonflables, toitures."}, "FKM": {"code": "FKM / FPM", "fullname": "Fluoroélastomère (Viton)", "group": "Groupe M — Saturés", "chimie": "Famille de copolymères et terpolymères fluorés : VF2/HFP (type A), VF2/HFP/TFE (type B/F), VF2/PMVE/TFE (type GF, basse température). Le taux de fluor (65-70%) détermine la résistance chimique. Vulcanisation aux bisphénols (Grade AF) ou aux peroxy des (Grade GF). Marque principale : Viton (Chemours).", "mecanique": "<b>Dureté :</b> 50 à 90 Shore A<br><b>Résistance à la traction :</b> 10 à 20 MPa<br><b>Allongement à la rupture :</b> 150 à 350 %<br><b>Résistance à la compression :</b> très bonne<br><b>Résistance à la fatigue :</b> bonne<br><b>Déformation rémanente :</b> faible", "thermique": "<b>Plage d'utilisation :</b> -30°C / +220°C (grades GF jusqu'à -40°C)<br><b>Tg :</b> -20°C à -40°C selon grade<br><b>Résistance à la chaleur :</b> excellente<br><b>Imimperméabilité aux gaz :</b> très bonne<br><b>Résistance aux fluides haute température :</b> excellente", "chimique": "<b>Huiles et carburants :</b> excellente résistance<br><b>Acides concentrés :</b> très bonne résistance<br><b>Solvants aromatiques :</b> très bonne résistance<br><b>Cétones et esters :</b> résistance limitée<br><b>Amines :</b> résistance limitée (sauf grades spéciaux)<br><b>Vieillissement thermique :</b> excellent", "usages": "<b>Avantages :</b> résistance chimique et thermique élevée, faible déformation rémanente, large compatibilité fluides, longue durée de vie.<br><b>Limites :</b> coût élevé, résistance aux cétones et amines limitée, flexibilité à très basse température restreinte (grades standard).<br><b>Usages :</b> joints moteur et groupe motopropulseur, industrie chimique et pétrochimique, aéronautique, joints de puits pétroliers."}, "FEPM": {"code": "AFLAS (FEPM)", "fullname": "Tétrafluoroéthylène-Propylène", "group": "Groupe M — Saturés", "chimie": "Copolymère alterné de tétrafluoroéthylène (TFE) et de propylène, produit par polymérisation en émulsion. Structure alternée TFE/P conférant une basicité relative par rapport au FKM (résistance aux amines). Taux de fluor (~54%) inférieur au FKM. Marque principale : AFLAS (AGC).", "mecanique": "<b>Dureté :</b> 50 à 90 Shore A<br><b>Résistance à la traction :</b> 10 à 18 MPa<br><b>Allongement à la rupture :</b> 150 à 300 %<br><b>Résistance à la compression :</b> bonne<br><b>Résistance à la déchirure :</b> moyenne", "thermique": "<b>Plage d'utilisation :</b> -20°C / +200°C<br><b>Tg :</b> -5°C<br><b>Résistance à la chaleur :</b> excellente<br><b>Résistance à la vapeur haute pression :</b> excellente<br><b>Imimperméabilité aux gaz :</b> très bonne", "chimique": "<b>Acides et bases forts :</b> excellente résistance<br><b>Amines :</b> très bonne résistance (supérieure au FKM)<br><b>Huiles et carburants :</b> très bonne résistance<br><b>H2S et gaz acides :</b> excellente résistance<br><b>Fluides de forage :</b> excellente résistance<br><b>Vieillissement thermique :</b> excellent", "usages": "<b>Avantages :</b> résistance aux amines et bases fortes supérieure au FKM, excellente tenue à la vapeur haute pression et aux gaz acides.<br><b>Limites :</b> Tg élevée (mauvaise tenue au froid), résistance aux solvants aromatiques inférieure au FKM, coût très élevé.<br><b>Usages :</b> joints downhole pétrolier, équipements de production de gaz, traitement chimique, applications vapeur et amines."}, "FFKM": {"code": "FFKM", "fullname": "Perfluoroélastomère (Kalrez, Chemraz)", "group": "Groupe M — Saturés", "chimie": "Copolymère entièrement fluoré de TFE et de PMVE (perfluorométhylvinyléther) avec un monomère de réticulation perfluoré. Taux de fluor > 70%, le plus élevé des élastomères. Structure similaire au PTFE mais réticulée. Vulcanisation aux peroxides ou par irradiation. Marques : Kalrez (DuPont), Chemraz (Greene Tweed).", "mecanique": "<b>Dureté :</b> 60 à 90 Shore A<br><b>Résistance à la traction :</b> 8 à 15 MPa<br><b>Allongement à la rupture :</b> 100 à 250 %<br><b>Déformation rémanente :</b> très faible<br><b>Résistance à la compression :</b> excellente<br><b>Fluage :</b> faible", "thermique": "<b>Plage d'utilisation :</b> -15°C / +320°C (grades spéciaux jusqu'à 330°C)<br><b>Tg :</b> -10°C à 0°C<br><b>Résistance à la chaleur :</b> exceptionnelle<br><b>Faible dégazage :</b> oui (ultra-vide)<br><b>Imimperméabilité aux gaz :</b> très faible", "chimique": "<b>Résistance chimique :</b> quasi-universelle (> 1800 fluides testés)<br><b>Acides et bases concentrés :</b> excellente résistance<br><b>Solvants :</b> excellente résistance<br><b>Plasma et UV :</b> bonne résistance<br><b>Amines :</b> excellente résistance<br><b>Vieillissement thermique :</b> exceptionnel", "usages": "<b>Avantages :</b> résistance chimique et thermique inégalées, faible dégazage, longue durée de vie en conditions sévères, fiabilité extrême.<br><b>Limites :</b> coût très élevé (100 à 1000 fois le NBR), flexibilité à froid limitée, allongement faible.<br><b>Usages :</b> semi-conducteurs (salles blanches), pharma et chimie fine, aérospatiale, réacteurs nucléaires, équipements ultra-haute performance."}, "VMQ": {"code": "VMQ", "fullname": "Silicone Méthylvinyle", "group": "Groupe Q — Silicones", "chimie": "Polysiloxane à base de diméthylsiloxane avec unités méthylvinylsiloxane (0,1-1%) pour la réticulation. Squelette Si-O-Si très flexible et stable. Vulcanisation au peroxyde (VMQ) ou par addition (LSR). Le caractère inorganique du squelette confère une stabilité thermique et UV exceptionnelle.", "mecanique": "<b>Dureté :</b> 10 à 80 Shore A<br><b>Résistance à la traction :</b> 4 à 10 MPa<br><b>Allongement à la rupture :</b> 100 à 600 %<br><b>Résistance à la déchirure :</b> faible à moyenne<br><b>Rebond élastique :</b> bon<br><b>Résistance mécanique :</b> la plus faible des élastomères techniques", "thermique": "<b>Plage d'utilisation :</b> -60°C / +200°C (pointes à 280°C)<br><b>Tg :</b> -120°C<br><b>Conductivité thermique :</b> 0,20 W/m·K (améliorable par charges)<br><b>Résistance à la chaleur :</b> excellente<br><b>Comportement au froid :</b> excellent", "chimique": "<b>Huiles et graisses :</b> résistance modérée<br><b>Ozone et UV :</b> excellente résistance<br><b>Acides dilués :</b> bonne résistance<br><b>Acides et bases concentrés :</b> résistance limitée<br><b>Solvants :</b> gonflement important<br><b>Vieillissement thermique :</b> excellent", "usages": "<b>Avantages :</b> plage thermique très étendue, biocompatibilité, transparence possible, flexibilité à très basse température, inertie chimique et physiologique.<br><b>Limites :</b> résistance mécanique faible, résistance aux huiles modérée, coût élevé, gonflement dans les solvants.<br><b>Usages :</b> joints alimentaires et médicaux, implants, isolation électrique, joint de four, tuyaux de laboratoire, articles de bébé."}, "PVMQ": {"code": "PVMQ", "fullname": "Silicone Phénylé", "group": "Groupe Q — Silicones", "chimie": "Polysiloxane incorporant des groupes méthylphénylsiloxane (5-20%) en plus des unités diméthylsiloxane et méthylvinylsiloxane. Les groupes phényle encombrants perturbent la cristallisation du silicone à basse température, abaissant la Tg et la température de fragilité. Vulcanisation au peroxyde.", "mecanique": "<b>Dureté :</b> 30 à 70 Shore A<br><b>Résistance à la traction :</b> 5 à 10 MPa<br><b>Allongement à la rupture :</b> 200 à 400 %<br><b>Résistance mécanique :</b> faible<br><b>Flexibilité à très basse température :</b> exceptionnelle", "thermique": "<b>Plage d'utilisation :</b> -100°C / +200°C<br><b>Tg :</b> -120°C à -130°C<br><b>Résistance au froid extrême :</b> exceptionnelle<br><b>Résistance aux rayonnements :</b> bonne<br><b>Imimperméabilité aux gaz :</b> élevée", "chimique": "<b>Huiles et graisses :</b> résistance modérée<br><b>Ozone et UV :</b> excellente résistance<br><b>Solvants :</b> gonflement important<br><b>Fluides hydrauliques à base d'ester :</b> résistance modérée<br><b>Vieillissement thermique :</b> excellent", "usages": "<b>Avantages :</b> tenue au froid extrême incomparable (-100°C), résistance aux rayonnements, propriétés optiques particulières, stabilité thermique.<br><b>Limites :</b> résistance mécanique faible, coût très élevé, disponibilité restreinte, gonflement dans les solvants.<br><b>Usages :</b> aéronautique et spatial (joints cryogéniques), instruments scientifiques, équipements militaires grands froids, joints pour hélicoptères."}, "FVMQ": {"code": "FVMQ", "fullname": "Silicone Fluoré", "group": "Groupe Q — Silicones", "chimie": "Polysiloxane incorporant des groupes trifluoropropylméthylsiloxane. Le fluor introduit sur la chaîne latérale améliore la résistance aux huiles et carburants par rapport au VMQ, tout en conservant le squelette Si-O-Si pour la stabilité thermique. Taux de fluor : 30-40%. Vulcanisation au peroxyde.", "mecanique": "<b>Dureté :</b> 40 à 80 Shore A<br><b>Résistance à la traction :</b> 5 à 10 MPa<br><b>Allongement à la rupture :</b> 150 à 350 %<br><b>Résistance mécanique :</b> faible à moyenne<br><b>Déformation rémanente :</b> faible", "thermique": "<b>Plage d'utilisation :</b> -65°C / +175°C<br><b>Tg :</b> -68°C<br><b>Résistance à la chaleur :</b> très bonne<br><b>Comportement au froid :</b> excellent<br><b>Imimperméabilité aux gaz :</b> bonne", "chimique": "<b>Carburants aviation (Jet A, JP-4) :</b> excellente résistance<br><b>Huiles hydrauliques fluorées :</b> très bonne résistance<br><b>Huiles minérales :</b> bonne résistance<br><b>Solvants aromatiques :</b> bonne résistance<br><b>Acides :</b> résistance modérée<br><b>Vieillissement thermique :</b> très bon", "usages": "<b>Avantages :</b> combine tenue aux fluides (carburants, huiles) du FKM et excellente flexibilité à basse température du silicone.<br><b>Limites :</b> résistance mécanique faible, coût très élevé, plage thermique haute inférieure au FKM.<br><b>Usages :</b> joints aéronautiques en contact carburant, conduits de carburant avion, applications militaires, joints moteur aéronautiques."}, "AU": {"code": "AU", "fullname": "Polyuréthane Polyester", "group": "Groupe U — Polyuréthanes", "chimie": "Élastomère de polyuréthane obtenu par réaction d'un polyol polyester avec un diisocyanate (MDI ou TDI) et un allongeur de chaîne. Les liaisons uréthane (-NH-CO-O-) et les domaines durs/mous confèrent une grande versatilité. Le segment polyester apporte résistance mécanique et aux huiles.", "mecanique": "<b>Dureté :</b> 30 Shore A à 75 Shore D<br><b>Résistance à la traction :</b> 25 à 60 MPa<br><b>Allongement à la rupture :</b> 300 à 700 %<br><b>Résistance à l'abrasion :</b> exceptionnelle (meilleure des élastomères)<br><b>Résistance à la déchirure :</b> très élevée<br><b>Module élevé :</b> oui", "thermique": "<b>Plage d'utilisation :</b> -40°C / +100°C<br><b>Tg :</b> -40°C<br><b>Résistance à la chaleur :</b> modérée<br><b>Imimperméabilité aux gaz :</b> bonne<br><b>Conductivité thermique :</b> 0,21 W/m·K", "chimique": "<b>Huiles minérales :</b> bonne à très bonne résistance<br><b>Eau froide :</b> bonne résistance<br><b>Eau chaude / vapeur :</b> mauvaise résistance (hydrolyse)<br><b>Acides et bases :</b> résistance modérée<br><b>Solvants :</b> résistance variable<br><b>Vieillissement thermique :</b> limité au-delà de 80°C", "usages": "<b>Avantages :</b> résistance à l'abrasion inégalée, module et dureté très élevés possibles, résistance à la déchirure exceptionnelle, large gamme de dureté.<br><b>Limites :</b> sensible à l'hydrolyse (eau chaude et vapeur), résistance thermique limitée, sensible aux acides/bases forts.<br><b>Usages :</b> joints hydrauliques haute pression, racleurs, galets et rouleaux industriels, pièces anti-abrasion, éléments de suspension."}, "EU": {"code": "EU", "fullname": "Polyuréthane Polyéther", "group": "Groupe U — Polyuréthanes", "chimie": "Élastomère de polyuréthane à base de polyol polyéther (polyéthylèneglycol, polypropylèneglycol ou PTMEG). Les liaisons éther (-C-O-C-) sont moins sensibles à l'hydrolyse que les liaisons ester du AU. Meilleure résistance microbiologique. Vulcanisation par MDI ou TDI.", "mecanique": "<b>Dureté :</b> 30 Shore A à 70 Shore D<br><b>Résistance à la traction :</b> 20 à 50 MPa<br><b>Allongement à la rupture :</b> 300 à 700 %<br><b>Résistance à l'abrasion :</b> excellente (légèrement inférieure à AU)<br><b>Résistance à la déchirure :</b> très élevée<br><b>Flexibilité à froid :</b> meilleure que AU", "thermique": "<b>Plage d'utilisation :</b> -50°C / +90°C<br><b>Tg :</b> -50°C<br><b>Résistance à la chaleur :</b> modérée<br><b>Imimperméabilité aux gaz :</b> bonne<br><b>Résistance en milieu humide :</b> très bonne", "chimique": "<b>Huiles minérales :</b> bonne résistance<br><b>Eau et milieux humides :</b> très bonne résistance<br><b>Eau chaude :</b> bonne résistance (supérieure à AU)<br><b>Micro-organismes :</b> résistance bonne<br><b>Acides et bases dilués :</b> résistance modérée<br><b>Vieillissement thermique :</b> modéré", "usages": "<b>Avantages :</b> résistance à l'hydrolyse supérieure à AU, bonne tenue en milieu humide et immergé, résistance microbiologique, flexibilité à froid améliorée.<br><b>Limites :</b> résistance mécanique légèrement inférieure à AU, sensible aux acides et bases forts, résistance thermique limitée.<br><b>Usages :</b> applications marines et immergées, équipements médicaux, joints en milieu humide, tuyaux flexibles, applications alimentaires."}, "ECO": {"code": "ECO", "fullname": "Épichlorhydrine Copolymère", "group": "Groupe O — Oxygénés", "chimie": "Copolymère d'oxyde d'éthylène (EO) et d'épichlorhydrine (ECH), avec éventuellement de l'oxyde d'allyle (terpolymère GECO) pour améliorer la tenue au froid. Le rapport EO/ECH gouverne la Tg et l'imperméabilité aux gaz. Vulcanisation par amines aromatiques ou thiourées.", "mecanique": "<b>Dureté :</b> 40 à 80 Shore A<br><b>Résistance à la traction :</b> 8 à 15 MPa<br><b>Allongement à la rupture :</b> 200 à 500 %<br><b>Résistance à la compression :</b> bonne<br><b>Flexibilité à froid :</b> bonne (meilleure que CO)", "thermique": "<b>Plage d'utilisation :</b> -40°C / +135°C<br><b>Tg :</b> -40°C<br><b>Résistance à la chaleur :</b> bonne<br><b>Imimperméabilité aux gaz :</b> très bonne<br><b>Imperméabilité aux carburants :</b> excellente", "chimique": "<b>Carburants et huiles :</b> très bonne résistance<br><b>Ozone :</b> très bonne résistance<br><b>Acides dilués :</b> bonne résistance<br><b>Biocarburants (E10, E85) :</b> très bonne résistance<br><b>Eau :</b> bonne résistance<br><b>Vieillissement thermique :</b> bon", "usages": "<b>Avantages :</b> excellente imperméabilité aux gaz et carburants, bonne résistance aux biocarburants, bonne tenue au froid, résistance à l'ozone.<br><b>Limites :</b> résistance aux acides concentrés limitée, vulcanisation délicate, coût élevé.<br><b>Usages :</b> durites carburant, membranes de diaphragme, systèmes EVAP automobile, joints pour biocarburants reformulés."}, "CO": {"code": "CO", "fullname": "Polychlorométhyloxirane (Homopolymère)", "group": "Groupe O — Oxygénés", "chimie": "Homopolymère de l'épichlorhydrine, obtenu par polymérisation cationique. La haute densité de groupes chlorométhyle confère une imperméabilité aux gaz maximale mais une Tg élevée limitant la tenue au froid. Plus cristallin et moins flexible que ECO.", "mecanique": "<b>Dureté :</b> 50 à 80 Shore A<br><b>Résistance à la traction :</b> 8 à 12 MPa<br><b>Allongement à la rupture :</b> 200 à 400 %<br><b>Résistance à la compression :</b> bonne<br><b>Flexibilité à froid :</b> limitée (inférieure à ECO)", "thermique": "<b>Plage d'utilisation :</b> -25°C / +135°C<br><b>Tg :</b> -20°C<br><b>Résistance à la chaleur :</b> bonne<br><b>Imimperméabilité aux gaz :</b> excellente (supérieure à ECO)<br><b>Imperméabilité maximale aux carburants</b>", "chimique": "<b>Carburants et huiles :</b> excellente résistance<br><b>Ozone :</b> très bonne résistance<br><b>Acides dilués :</b> bonne résistance<br><b>Eau froide :</b> bonne résistance<br><b>Solvants polaires :</b> résistance modérée<br><b>Vieillissement thermique :</b> bon", "usages": "<b>Avantages :</b> imperméabilité aux gaz et carburants maximale (supérieure à ECO), excellente résistance aux huiles, bonne résistance à l'ozone.<br><b>Limites :</b> Tg élevée (mauvaise tenue au froid), moins flexible que ECO, coût élevé.<br><b>Usages :</b> joints et membranes pour systèmes carburant nécessitant imperméabilité maximale, industrie automobile, applications nécessitant résistance au gonflement."}}</script>
 </head>
 <body>
 
@@ -1561,163 +1803,143 @@
 <section id="materiaux">
   <div class="section-tag">Notre domaine</div>
   <h2>Matériaux Maîtrisés</h2>
-  <p class="section-intro">Un portefeuille complet de familles élastomères pour répondre à toutes les exigences applicatives.</p>
+  <p class="section-intro">24 familles élastomères classées selon la norme <strong>ISO 1629</strong>. Cliquez sur un matériau pour accéder à sa fiche technique.</p>
 
-  <table class="mat-table">
-    <thead>
-      <tr>
-        <th>Élastomère</th>
-        <th>Plage thermique</th>
-        <th>Propriétés</th>
-        <th>Applications typiques</th>
-        <th>Expertise</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>NR / IR</td>
-        <td>-60 °C / +80 °C</td>
-        <td>Propriétés mécaniques naturelles</td>
-        <td>Pneumatiques, amortisseurs</td>
-        <td><span class="badge">Expert</span></td>
-      </tr>
-      <tr>
-        <td>SBR</td>
-        <td>-50 °C / +100 °C</td>
-        <td>Abrasion, polyvalence</td>
-        <td>Semelles, revêtements, pneus</td>
-        <td><span class="badge">Expert</span></td>
-      </tr>
-      <tr>
-        <td>EPDM</td>
-        <td>-45 °C / +135 °C</td>
-        <td>Résistance UV, ozone, eau</td>
-        <td>Joints auto, géomembranes, toiture</td>
-        <td><span class="badge">Expert</span></td>
-      </tr>
-      <tr>
-        <td>EPM</td>
-        <td>-45 °C / +160 °C</td>
-        <td>Résistance UV et ozone, acide et base, tenue hautes températures</td>
-        <td>Automobile, chimie, joints d'échangeurs thermiques</td>
-        <td><span class="badge">Expert</span></td>
-      </tr>
-      <tr>
-        <td>IIR / BIIR / CIIR</td>
-        <td>-60 °C / +110 °C</td>
-        <td>Résistance ozone, oxygène, acide et base, solvant polaire et huile végétale et animale, excellentes propriétés amortissantes</td>
-        <td>Bouchons pharmaceutiques, amortisseurs, chambres à air, vessies de vulcanisation, revêtements de toitures</td>
-        <td><span class="badge">Expert</span></td>
-      </tr>
-      <tr>
-        <td>CR</td>
-        <td>-40 °C / +120 °C</td>
-        <td>Autoextinguible, résistance aux huiles aliphatiques, propriétés mécaniques en statique et dynamiques (pour les grades GW)</td>
-        <td>Câblerie, automobile, ferroviaire, bandes transporteuses</td>
-        <td><span class="badge">Expert</span></td>
-      </tr>
-      <tr>
-        <td>NBR</td>
-        <td>-40 °C / +120 °C</td>
-        <td>Résistance huiles et carburants, résistance au froid pour certains grades</td>
-        <td>Automobile, industrie agro-alimentaire, revêtement de cylindres</td>
-        <td><span class="badge">Expert</span></td>
-      </tr>
-      <tr>
-        <td>HNBR</td>
-        <td>-40 °C / +170 °C</td>
-        <td>Résistance ozone et UV, huiles et carburants, excellente résistance à l'abrasion et aux sollicitations dynamiques, tenue thermique</td>
-        <td>Pétrochimie, convoyage, automobile</td>
-        <td><span class="badge">Expert</span></td>
-      </tr>
-      <tr>
-        <td>XNBR</td>
-        <td>-20 °C / +110 °C</td>
-        <td>Identique au NBR avec une excellente résistance à l'abrasion</td>
-        <td>Joints de pompes, vérins et vannes, revêtement de cylindres, garnitures, membranes</td>
-        <td><span class="badge">Expert</span></td>
-      </tr>
-      <tr>
-        <td>CSM</td>
-        <td>-40 °C / +140 °C</td>
-        <td>Excellentes propriétés mécaniques, bonne résistance à l'abrasion, excellent vieillissement (UV, ozone, oxygène), excellente stabilité des mélanges colorés, très bonne résistance aux acides, oxydants et huiles chaudes, autoextinguible</td>
-        <td>Câblerie, enduction de tissus, industrie nautique, convoyage</td>
-        <td><span class="badge">Expert</span></td>
-      </tr>
-      <tr>
-        <td>ECO / CO</td>
-        <td>-40 °C / +125 °C</td>
-        <td>Faible échauffement interne en application dynamique, résistance aux huiles et carburants, imperméable aux gaz secs</td>
-        <td>Automobile, aéronautique, joint de compresseur</td>
-        <td><span class="badge">Expert</span></td>
-      </tr>
-      <tr>
-        <td>AU / EU (malaxable)</td>
-        <td>-40 °C / +110 °C</td>
-        <td>Excellente résistance à l'abrasion, résilience, excellentes propriétés mécaniques</td>
-        <td>Amortisseurs, ressorts élastiques, convoyage, garnissage de roues et roulettes, loisirs et sports</td>
-        <td><span class="badge">Expert</span></td>
-      </tr>
-      <tr>
-        <td>ACM</td>
-        <td>-25 °C / +170 °C</td>
-        <td>Excellente résistance UV, oxygène, ozone, bonne résistance aux hydrocarbures chauds</td>
-        <td>Automobile (joints de boîte de vitesse, queue de soupape), aéronautique</td>
-        <td><span class="badge">Expert</span></td>
-      </tr>
-      <tr>
-        <td>AEM</td>
-        <td>-45 °C / +185 °C</td>
-        <td>Excellente stabilité thermique, résistance à l'ozone et oxygène, très bonne résistance aux huiles chaudes</td>
-        <td>Automobile (capuchons de bougie, gaines de câble, joints et durites)</td>
-        <td><span class="badge">Expert</span></td>
-      </tr>
-      <tr>
-        <td>Silicone (VMQ)</td>
-        <td>-60 °C / +220 °C</td>
-        <td>Biocompatibilité, stabilité thermique (pouvant aller jusqu'à 280 °C)</td>
-        <td>Médical, alimentaire, aéronautique</td>
-        <td><span class="badge">Expert</span></td>
-      </tr>
-      <tr>
-        <td>Silicone phénylé (PVMQ)</td>
-        <td>-110 °C / +200 °C</td>
-        <td>Propriétés mécaniques moyennes, excellente souplesse à très basse température</td>
-        <td>Aérospatiale, aéronautique</td>
-        <td><span class="badge">Expert</span></td>
-      </tr>
-      <tr>
-        <td>Silicone Fluoré (FVMQ)</td>
-        <td>-60 °C / +220 °C</td>
-        <td>Identiques aux silicones, avec une excellente résistance aux solvants et hydrocarbures, très bonne DRC en température</td>
-        <td>Aérospatial et aéronautique (joints, flexibles, diaphragmes)</td>
-        <td><span class="badge">Expert</span></td>
-      </tr>
-      <tr>
-        <td>FKM / FPM</td>
-        <td>-30 °C (selon les grades) / +220 °C</td>
-        <td>Résistance chimique extrême</td>
-        <td>Pétrochimie, aérospatiale</td>
-        <td><span class="badge">Expert</span></td>
-      </tr>
+  <!-- GROUPE R -->
+  <div class="mat-group">
+    <div class="mat-group-header">
+      <span class="mat-group-code">Groupe R</span>
+      <span class="mat-group-name">Élastomères à chaîne diénique non saturée</span>
+    </div>
+    <div class="mat-list">
+      <button class="mat-item" onclick="openMatModal('NR')"><span class="mat-code">NR</span><span class="mat-label">Caoutchouc Naturel</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('IR')"><span class="mat-code">IR</span><span class="mat-label">Polyisoprène Synthétique</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('SBR')"><span class="mat-code">SBR</span><span class="mat-label">Styrène-Butadiène</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('BR')"><span class="mat-code">BR</span><span class="mat-label">Polybutadiène</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('NBR')"><span class="mat-code">NBR</span><span class="mat-label">Nitrile Butadiène</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('HNBR')"><span class="mat-code">HNBR</span><span class="mat-label">Nitrile Hydrogéné</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('XNBR')"><span class="mat-code">XNBR</span><span class="mat-label">Nitrile Carboxylé</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('CR')"><span class="mat-code">CR</span><span class="mat-label">Polychloroprène (Néoprène)</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('IIR')"><span class="mat-code">IIR</span><span class="mat-label">Caoutchouc Butyle</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('BIIR')"><span class="mat-code">BIIR</span><span class="mat-label">Butyle Bromé</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('CIIR')"><span class="mat-code">CIIR</span><span class="mat-label">Butyle Chloré</span><span class="mat-arrow">→</span></button>
+    </div>
+  </div>
 
-      <tr>
-        <td>AFLAS (FEPM)</td>
-        <td>-5 °C / +200 °C</td>
-        <td>Résistance chimique identique aux FPM, excellente résistance à la vapeur et donc à l'hydrolyse</td>
-        <td>Aérospatial et aéronautique, énergie, transport, électronique et semi-conducteur</td>
-        <td><span class="badge">Expert</span></td>
-      </tr>
-      <tr>
-        <td>FFKM</td>
-        <td>-15 °C / +250 à 320 °C selon les grades</td>
-        <td>Résistance exceptionnelle aux produits chimiques agressifs</td>
-        <td>Industrie chimique, énergie, électronique et semi-conducteur, aérospatial et aéronautique</td>
-        <td><span class="badge">Expert</span></td>
-      </tr>
-    </tbody>
-  </table>
+  <!-- GROUPE M -->
+  <div class="mat-group">
+    <div class="mat-group-header">
+      <span class="mat-group-code">Groupe M</span>
+      <span class="mat-group-name">Élastomères à chaîne principale saturée</span>
+    </div>
+    <div class="mat-list">
+      <button class="mat-item" onclick="openMatModal('EPDM')"><span class="mat-code">EPDM</span><span class="mat-label">Éthylène-Propylène-Diène</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('EPM')"><span class="mat-code">EPM</span><span class="mat-label">Éthylène-Propylène</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('ACM')"><span class="mat-code">ACM</span><span class="mat-label">Polyacrylate</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('AEM')"><span class="mat-code">AEM</span><span class="mat-label">Éthylène-Acrylate (Vamac®)</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('CSM')"><span class="mat-code">CSM</span><span class="mat-label">Chlorosulfonyl-Polyéthylène (Hypalon®)</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('FKM')"><span class="mat-code">FKM / FPM</span><span class="mat-label">Fluoroélastomère (Viton®)</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('FEPM')"><span class="mat-code">FEPM (AFLAS®)</span><span class="mat-label">Tétrafluoroéthylène-Propylène</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('FFKM')"><span class="mat-code">FFKM</span><span class="mat-label">Perfluoroélastomère (Kalrez®)</span><span class="mat-arrow">→</span></button>
+    </div>
+  </div>
+
+  <!-- GROUPE Q -->
+  <div class="mat-group">
+    <div class="mat-group-header">
+      <span class="mat-group-code">Groupe Q</span>
+      <span class="mat-group-name">Silicones</span>
+    </div>
+    <div class="mat-list">
+      <button class="mat-item" onclick="openMatModal('VMQ')"><span class="mat-code">VMQ</span><span class="mat-label">Silicone Méthylvinyle</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('PVMQ')"><span class="mat-code">PVMQ</span><span class="mat-label">Silicone Phénylé</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('FVMQ')"><span class="mat-code">FVMQ</span><span class="mat-label">Silicone Fluoré</span><span class="mat-arrow">→</span></button>
+    </div>
+  </div>
+
+  <!-- GROUPE U -->
+  <div class="mat-group">
+    <div class="mat-group-header">
+      <span class="mat-group-code">Groupe U</span>
+      <span class="mat-group-name">Polyuréthanes élastomères</span>
+    </div>
+    <div class="mat-list">
+      <button class="mat-item" onclick="openMatModal('AU')"><span class="mat-code">AU</span><span class="mat-label">Polyuréthane Polyester</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('EU')"><span class="mat-code">EU</span><span class="mat-label">Polyuréthane Polyéther</span><span class="mat-arrow">→</span></button>
+    </div>
+  </div>
+
+  <!-- GROUPE O -->
+  <div class="mat-group">
+    <div class="mat-group-header">
+      <span class="mat-group-code">Groupe O</span>
+      <span class="mat-group-name">Élastomères à base d'oxygène</span>
+    </div>
+    <div class="mat-list">
+      <button class="mat-item" onclick="openMatModal('ECO')"><span class="mat-code">ECO</span><span class="mat-label">Épichlorhydrine Copolymère</span><span class="mat-arrow">→</span></button>
+      <button class="mat-item" onclick="openMatModal('CO')"><span class="mat-code">CO</span><span class="mat-label">Polychlorométhyloxirane</span><span class="mat-arrow">→</span></button>
+    </div>
+  </div>
 </section>
+
+<!-- MODAL FICHE MATÉRIAU -->
+<div class="mat-modal" id="mat-modal">
+  <div class="mat-modal-inner">
+    <button class="mat-modal-close" onclick="closeMatModal()">✕ Fermer</button>
+
+    <!-- EN-TÊTE -->
+    <div class="mat-modal-header">
+      <div class="mat-modal-header-left">
+        <div class="mat-modal-group" id="mm-group"></div>
+        <div class="mat-modal-code" id="mm-code"></div>
+        <div class="mat-modal-fullname" id="mm-fullname"></div>
+      </div>
+      <div class="mat-modal-header-right">
+        <div class="mat-fiche-expertise">
+          <span>Niveau d'expertise POLYDEV</span>
+          <span class="badge">Expert</span>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- GRILLE 5 RUBRIQUES -->
+    <div class="mat-modal-grid">
+
+      <div class="mat-fiche-section">
+        <div class="mat-fiche-section-num">01</div>
+        <div class="mat-fiche-section-title">Nature &amp; Composition chimique</div>
+        <div class="mat-fiche-section-body" id="mm-chimie"></div>
+      </div>
+
+      <div class="mat-fiche-section">
+        <div class="mat-fiche-section-num">02</div>
+        <div class="mat-fiche-section-title">Propriétés mécaniques</div>
+        <div class="mat-fiche-section-body" id="mm-mecanique"></div>
+      </div>
+
+      <div class="mat-fiche-section">
+        <div class="mat-fiche-section-num">03</div>
+        <div class="mat-fiche-section-title">Propriétés physiques &amp; thermiques</div>
+        <div class="mat-fiche-section-body" id="mm-thermique"></div>
+      </div>
+
+      <div class="mat-fiche-section">
+        <div class="mat-fiche-section-num">04</div>
+        <div class="mat-fiche-section-title">Propriétés chimiques &amp; vieillissement</div>
+        <div class="mat-fiche-section-body" id="mm-chimique"></div>
+      </div>
+
+      <div class="mat-fiche-section mat-fiche-section--full">
+        <div class="mat-fiche-section-num">05</div>
+        <div class="mat-fiche-section-title">Avantages, limites &amp; usages typiques</div>
+        <div class="mat-fiche-section-body" id="mm-usages"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
 
 <!-- PROCESSUS -->
 <section id="processus">
@@ -1870,7 +2092,7 @@
         <svg class="contact-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
         <div>
           <div class="contact-detail-label">Email</div>
-          <div class="contact-detail-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4636292a3f2223306b25292835332a3206212b3e682034">[email&#160;protected]</a></div>
+          <div class="contact-detail-val">polydev-consult@gmx.fr</div>
         </div>
       </div>
     </div>
@@ -1918,4 +2140,12 @@
     <div class="footer-logo">POLY<span>DEV</span> CONSULTING</div>
     <div class="footer-copy">© 2025 Polydev Consulting — Tous droits réservés</div>
   </div>
-  <div 
+  <div class="footer-right">
+    <div class="footer-visit" style="font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;color:var(--muted);">
+    👁 <span id="visit-count">—</span> visites
+  </div>
+  <div class="footer-copy">Mentions légales · Politique de confidentialité</div>
+</div>
+</footer>
+</body>
+</html>
