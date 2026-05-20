@@ -401,6 +401,53 @@
     }
     .secteur-pill:hover, .secteur-pill.active { border-color: var(--gold); color: var(--gold); background: rgba(0,119,204,0.05); }
 
+    /* ─── BLOG FILTRES ─── */
+    .blog-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .blog-filter-btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.55rem 1.2rem;
+      border: 2px solid var(--border);
+      background: transparent;
+      color: var(--silver);
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .blog-filter-btn::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: transparent;
+      transition: background 0.2s;
+    }
+    .blog-filter-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .blog-filter-btn.active { color: #fff; border-color: transparent; }
+    .blog-filter-btn[data-theme="Tous"].active                         { background: var(--text); }
+    .blog-filter-btn[data-theme="Matériaux & Formulation"].active      { background: #0077cc; }
+    .blog-filter-btn[data-theme="Procédés & Industrialisation"].active  { background: #1a7a4a; }
+    .blog-filter-btn[data-theme="Caractérisation & Essais"].active      { background: #7a3a9a; }
+    .blog-filter-btn[data-theme="Réglementation & Conformité"].active   { background: #c0622a; }
+    .blog-filter-btn[data-theme="Veille & Innovations"].active          { background: #2a7a9a; }
+
+    /* badge couleurs par thème */
+    .blog-category[data-theme="Matériaux & Formulation"]      { border-color:#0077cc; color:#0077cc; }
+    .blog-category[data-theme="Procédés & Industrialisation"]  { border-color:#1a7a4a; color:#1a7a4a; }
+    .blog-category[data-theme="Caractérisation & Essais"]      { border-color:#7a3a9a; color:#7a3a9a; }
+    .blog-category[data-theme="Réglementation & Conformité"]   { border-color:#c0622a; color:#c0622a; }
+    .blog-category[data-theme="Veille & Innovations"]          { border-color:#2a7a9a; color:#2a7a9a; }
+
+    .blog-card.hidden-card { display: none; }
+
     /* ─── BLOG ─── */
     #page-blog { background: var(--dark); }
 
@@ -998,14 +1045,31 @@
         <button class="btn-admin" onclick="logoutAdmin()">Déconnexion</button>
       </div>
 
+      <!-- FILTRES PAR THÈME -->
+      <div class="blog-filters">
+        <button class="blog-filter-btn active" data-theme="Tous" onclick="filterBlog('Tous')">Tous</button>
+        <button class="blog-filter-btn" data-theme="Matériaux & Formulation" onclick="filterBlog('Matériaux & Formulation')">Matériaux & Formulation</button>
+        <button class="blog-filter-btn" data-theme="Procédés & Industrialisation" onclick="filterBlog('Procédés & Industrialisation')">Procédés & Industrialisation</button>
+        <button class="blog-filter-btn" data-theme="Caractérisation & Essais" onclick="filterBlog('Caractérisation & Essais')">Caractérisation & Essais</button>
+        <button class="blog-filter-btn" data-theme="Réglementation & Conformité" onclick="filterBlog('Réglementation & Conformité')">Réglementation & Conformité</button>
+        <button class="blog-filter-btn" data-theme="Veille & Innovations" onclick="filterBlog('Veille & Innovations')">Veille & Innovations</button>
+      </div>
+
       <div id="blog-grid" class="blog-grid"></div>
       <div id="blog-empty" class="blog-empty" style="display:none;">Aucun article publié pour le moment.</div>
+      <div id="blog-empty-filter" class="blog-empty" style="display:none;">Aucun article dans cette catégorie pour le moment.</div>
 
       <div class="blog-editor" id="blog-editor">
         <div class="editor-title" id="editor-title-label">Nouvel Article</div>
         <div class="editor-row">
           <div class="editor-group"><label>Titre de l'article</label><input type="text" id="art-title" placeholder="Titre de votre article" /></div>
-          <div class="editor-group"><label>Catégorie</label><select id="art-category"><option value="Actualité technique">Actualité technique</option><option value="Fiche matériau">Fiche matériau</option><option value="Retour d'expérience">Retour d'expérience</option><option value="Veille réglementaire">Veille réglementaire</option><option value="Administration">Administration</option></select></div>
+          <div class="editor-group"><label>Thème</label><select id="art-category">
+            <option value="Matériaux & Formulation">Matériaux & Formulation</option>
+            <option value="Procédés & Industrialisation">Procédés & Industrialisation</option>
+            <option value="Caractérisation & Essais">Caractérisation & Essais</option>
+            <option value="Réglementation & Conformité">Réglementation & Conformité</option>
+            <option value="Veille & Innovations">Veille & Innovations</option>
+          </select></div>
         </div>
         <div class="editor-group"><label>Résumé (affiché sur la carte)</label><input type="text" id="art-excerpt" placeholder="Courte description de l'article..." /></div>
         <div class="editor-group"><label>Contenu de l'article</label><textarea id="art-content" placeholder="Rédigez votre article ici..."></textarea></div>
@@ -1176,35 +1240,70 @@ async function updateArticle(id,a) { return sbFetch('articles?id=eq.'+id,'PATCH'
 async function deleteArticleDb(id) { return sbFetch('articles?id=eq.'+id,'DELETE'); }
 
 // ─── BLOG ───
-var CAT_COLORS = {
-  'Actualité technique':'#0077cc','Fiche matériau':'#0099aa',
-  "Retour d\'expérience":'#3a8a2a','Veille réglementaire':'#c87a7a','Administration':'#c8a96e'
+var THEME_COLORS = {
+  'Matériaux & Formulation':      '#0077cc',
+  'Procédés & Industrialisation': '#1a7a4a',
+  'Caractérisation & Essais':     '#7a3a9a',
+  'Réglementation & Conformité':  '#c0622a',
+  'Veille & Innovations':         '#2a7a9a'
 };
+var currentFilter = 'Tous';
 
 async function renderBlog() {
   var grid = document.getElementById('blog-grid');
   var empty = document.getElementById('blog-empty');
+  var emptyFilter = document.getElementById('blog-empty-filter');
   if (!grid) return;
   grid.style.display = 'block';
   grid.innerHTML = '<div style="color:var(--muted);font-family:monospace;font-size:0.75rem;padding:2rem;text-align:center;">Chargement...</div>';
   var articles = await getArticles();
   grid.innerHTML = '';
-  if (!articles || !articles.length) { grid.style.display='none'; empty.style.display='block'; return; }
-  grid.style.display = 'grid'; empty.style.display = 'none';
+  if (!articles || !articles.length) { grid.style.display='none'; empty.style.display='block'; if(emptyFilter) emptyFilter.style.display='none'; return; }
+  empty.style.display = 'none';
+  grid.style.display = 'grid';
   articles.forEach(function(art) {
-    var c = CAT_COLORS[art.category] || '#0077cc';
+    var c = THEME_COLORS[art.category] || '#0077cc';
     var card = document.createElement('div');
     card.className = 'blog-card';
+    card.dataset.theme = art.category;
+    if (currentFilter !== 'Tous' && art.category !== currentFilter) card.classList.add('hidden-card');
     var ab = isAdmin
       ? '<button class="blog-delete" onclick="event.stopPropagation();deleteArticle(\'' + art.id + '\')">✕ Supprimer</button>'
         +'<button class="blog-delete" style="margin-right:.5rem" onclick="event.stopPropagation();editArticle(\'' + art.id + '\')">✎ Modifier</button>'
       : '';
-    card.innerHTML = '<div class="blog-card-header"><span class="blog-category" style="border-color:'+c+';color:'+c+'">'+art.category+'</span><span class="blog-date">'+art.date+'</span></div>'
-      +'<div class="blog-card-body"><div class="blog-card-title">'+art.title+'</div><div class="blog-card-excerpt">'+art.excerpt+'</div></div>'
+    card.innerHTML = '<div class="blog-card-header">'
+      +'<span class="blog-category" data-theme="'+art.category+'" style="border-color:'+c+';color:'+c+'">'+art.category+'</span>'
+      +'<span class="blog-date">'+art.date+'</span></div>'
+      +'<div class="blog-card-body"><div class="blog-card-title">'+art.title+'</div>'
+      +'<div class="blog-card-excerpt">'+art.excerpt+'</div></div>'
       +'<div class="blog-card-footer">Lire l\'article \u2192 '+ab+'</div>';
     card.addEventListener('click', (function(a){ return function(){ openArticle(a); }; })(art));
     grid.appendChild(card);
   });
+  updateEmptyFilter();
+}
+
+function filterBlog(theme) {
+  currentFilter = theme;
+  document.querySelectorAll('.blog-filter-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.dataset.theme === theme);
+  });
+  document.querySelectorAll('#blog-grid .blog-card').forEach(function(card) {
+    if (theme === 'Tous' || card.dataset.theme === theme) {
+      card.classList.remove('hidden-card');
+    } else {
+      card.classList.add('hidden-card');
+    }
+  });
+  updateEmptyFilter();
+}
+
+function updateEmptyFilter() {
+  var grid = document.getElementById('blog-grid');
+  var emptyFilter = document.getElementById('blog-empty-filter');
+  if (!grid || !emptyFilter) return;
+  var visible = grid.querySelectorAll('.blog-card:not(.hidden-card)');
+  emptyFilter.style.display = (visible.length === 0 && grid.querySelectorAll('.blog-card').length > 0) ? 'block' : 'none';
 }
 
 // ─── ARTICLE MODAL ───
