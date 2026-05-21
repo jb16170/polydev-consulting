@@ -1662,114 +1662,112 @@ window.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // ─── LIENS UTILES ───
-  var editingLienId = null;
-
-  async function getLiens() { return (await sbFetch('liens?order=theme.asc,created_at.asc','GET')) || []; }
-  async function insertLien(l) { return sbFetch('liens','POST',l); }
-  async function updateLien(id,l) { return sbFetch('liens?id=eq.'+id,'PATCH',l); }
-  async function deleteLienDb(id) { return sbFetch('liens?id=eq.'+id,'DELETE'); }
-
-  async function renderLiens() {
-    var container = document.getElementById('liens-container');
-    var empty = document.getElementById('liens-empty');
-    if (!container) return;
-    container.innerHTML = '<div style="color:var(--muted);font-family:monospace;font-size:0.75rem;padding:2rem;text-align:center;">Chargement...</div>';
-    var liens = await getLiens();
-    container.innerHTML = '';
-    if (!liens || !liens.length) { empty.style.display='block'; return; }
-    empty.style.display = 'none';
-
-    // group by theme
-    var groups = {};
-    liens.forEach(function(l) {
-      var t = l.theme || 'Autres';
-      if (!groups[t]) groups[t] = [];
-      groups[t].push(l);
-    });
-
-    // update datalist
-    var dl = document.getElementById('lien-themes-list');
-    if (dl) { dl.innerHTML = Object.keys(groups).map(function(t){ return '<option value="'+t+'">'; }).join(''); }
-
-    Object.keys(groups).forEach(function(theme) {
-      var block = document.createElement('div');
-      block.className = 'liens-theme-block';
-      var count = groups[theme].length;
-      block.innerHTML = '<div class="liens-theme-title">'+theme+' <span>'+count+' lien'+(count>1?'s':'')+'</span></div>'
-        +'<div class="liens-grid" id="grid-'+theme.replace(/\W/g,'_')+'"></div>';
-      container.appendChild(block);
-
-      var grid = block.querySelector('.liens-grid');
-      groups[theme].forEach(function(l) {
-        var card = document.createElement('div');
-        card.className = 'lien-card';
-        var adminBtns = isAdmin
-          ? '<div class="lien-actions">'
-            +'<button class="lien-btn-edit" onclick="editLien(\''+l.id+'\')">✎ Modifier</button>'
-            +'<button class="lien-btn-delete" onclick="deleteLien(\''+l.id+'\')">✕ Supprimer</button>'
-            +'</div>'
-          : '';
-        card.innerHTML = '<div class="lien-name">'+l.name+'</div>'
-          +'<div class="lien-comment">'+l.comment+'</div>'
-          +'<a class="lien-url" href="'+l.url+'" target="_blank" rel="noopener">↗ '+l.url+'</a>'
-          +adminBtns;
-        grid.appendChild(card);
-      });
-    });
-  }
-
-  function openLienEditor() {
-    editingLienId = null;
-    document.getElementById('lien-editor-title').textContent = 'Nouveau Lien';
-    document.getElementById('lien-name').value = '';
-    document.getElementById('lien-theme').value = '';
-    document.getElementById('lien-url').value = '';
-    document.getElementById('lien-comment').value = '';
-    document.getElementById('liens-editor').classList.add('open');
-    document.getElementById('liens-editor').scrollIntoView({behavior:'smooth'});
-  }
-  function closeLienEditor() {
-    document.getElementById('liens-editor').classList.remove('open');
-    editingLienId = null;
-  }
-  async function editLien(id) {
-    var liens = await getLiens();
-    var l = liens.find(function(x){ return x.id===id; });
-    if (!l) return;
-    editingLienId = id;
-    document.getElementById('lien-editor-title').textContent = 'Modifier le lien';
-    document.getElementById('lien-name').value = l.name;
-    document.getElementById('lien-theme').value = l.theme;
-    document.getElementById('lien-url').value = l.url;
-    document.getElementById('lien-comment').value = l.comment;
-    document.getElementById('liens-editor').classList.add('open');
-    document.getElementById('liens-editor').scrollIntoView({behavior:'smooth'});
-  }
-  async function saveLien() {
-    var name    = document.getElementById('lien-name').value.trim();
-    var theme   = document.getElementById('lien-theme').value.trim();
-    var url     = document.getElementById('lien-url').value.trim();
-    var comment = document.getElementById('lien-comment').value.trim();
-    if (!name || !url || !theme) { alert('Veuillez remplir le nom, le thème et l\'URL.'); return; }
-    var btn = document.getElementById('lien-btn-save');
-    btn.textContent = 'Enregistrement...'; btn.disabled = true;
-    var payload = { name:name, theme:theme, url:url, comment:comment };
-    if (editingLienId) { await updateLien(editingLienId, payload); }
-    else { await insertLien(payload); }
-    btn.textContent = 'Enregistrer le lien'; btn.disabled = false;
-    closeLienEditor();
-    await renderLiens();
-  }
-  async function deleteLien(id) {
-    if (!confirm('Supprimer ce lien ?')) return;
-    await deleteLienDb(id);
-    await renderLiens();
-  }
-
-
   goTo('home');
 });
+
+// ─── LIENS UTILES — fonctions globales ───
+var editingLienId = null;
+
+async function getLiens() { return (await sbFetch('liens?order=theme.asc,created_at.asc','GET')) || []; }
+async function insertLien(l) { return sbFetch('liens','POST',l); }
+async function updateLien(id,l) { return sbFetch('liens?id=eq.'+id,'PATCH',l); }
+async function deleteLienDb(id) { return sbFetch('liens?id=eq.'+id,'DELETE'); }
+
+async function renderLiens() {
+  var container = document.getElementById('liens-container');
+  var empty = document.getElementById('liens-empty');
+  if (!container) return;
+  container.innerHTML = '<div style="color:var(--muted);font-family:monospace;font-size:0.75rem;padding:2rem;text-align:center;">Chargement...</div>';
+  var liens = await getLiens();
+  container.innerHTML = '';
+  if (!liens || !liens.length) { empty.style.display='block'; return; }
+  empty.style.display = 'none';
+
+  var groups = {};
+  liens.forEach(function(l) {
+    var t = l.theme || 'Autres';
+    if (!groups[t]) groups[t] = [];
+    groups[t].push(l);
+  });
+
+  var dl = document.getElementById('lien-themes-list');
+  if (dl) { dl.innerHTML = Object.keys(groups).map(function(t){ return '<option value="'+t+'">'; }).join(''); }
+
+  Object.keys(groups).forEach(function(theme) {
+    var block = document.createElement('div');
+    block.className = 'liens-theme-block';
+    var count = groups[theme].length;
+    block.innerHTML = '<div class="liens-theme-title">'+theme+' <span>'+count+' lien'+(count>1?'s':'')+'</span></div>'
+      +'<div class="liens-grid" id="grid-'+theme.replace(/\W/g,'_')+'"></div>';
+    container.appendChild(block);
+
+    var grid = block.querySelector('.liens-grid');
+    groups[theme].forEach(function(l) {
+      var card = document.createElement('div');
+      card.className = 'lien-card';
+      var adminBtns = isAdmin
+        ? '<div class="lien-actions">'
+          +'<button class="lien-btn-edit" onclick="editLien(\''+l.id+'\')">✎ Modifier</button>'
+          +'<button class="lien-btn-delete" onclick="deleteLien(\''+l.id+'\')">✕ Supprimer</button>'
+          +'</div>'
+        : '';
+      card.innerHTML = '<div class="lien-name">'+l.name+'</div>'
+        +'<div class="lien-comment">'+l.comment+'</div>'
+        +'<a class="lien-url" href="'+l.url+'" target="_blank" rel="noopener">↗ '+l.url+'</a>'
+        +adminBtns;
+      grid.appendChild(card);
+    });
+  });
+}
+
+// ─── LIENS UTILES (fonctions globales) ───
+function openLienEditor() {
+  editingLienId = null;
+  document.getElementById('lien-editor-title').textContent = 'Nouveau Lien';
+  document.getElementById('lien-name').value = '';
+  document.getElementById('lien-theme').value = '';
+  document.getElementById('lien-url').value = '';
+  document.getElementById('lien-comment').value = '';
+  document.getElementById('liens-editor').classList.add('open');
+  document.getElementById('liens-editor').scrollIntoView({behavior:'smooth'});
+}
+function closeLienEditor() {
+  document.getElementById('liens-editor').classList.remove('open');
+  editingLienId = null;
+}
+async function editLien(id) {
+  var liens = await getLiens();
+  var l = liens.find(function(x){ return x.id===id; });
+  if (!l) return;
+  editingLienId = id;
+  document.getElementById('lien-editor-title').textContent = 'Modifier le lien';
+  document.getElementById('lien-name').value = l.name;
+  document.getElementById('lien-theme').value = l.theme;
+  document.getElementById('lien-url').value = l.url;
+  document.getElementById('lien-comment').value = l.comment;
+  document.getElementById('liens-editor').classList.add('open');
+  document.getElementById('liens-editor').scrollIntoView({behavior:'smooth'});
+}
+async function saveLien() {
+  var name    = document.getElementById('lien-name').value.trim();
+  var theme   = document.getElementById('lien-theme').value.trim();
+  var url     = document.getElementById('lien-url').value.trim();
+  var comment = document.getElementById('lien-comment').value.trim();
+  if (!name || !url || !theme) { alert('Veuillez remplir le nom, le thème et l\'URL.'); return; }
+  var btn = document.getElementById('lien-btn-save');
+  btn.textContent = 'Enregistrement...'; btn.disabled = true;
+  var payload = { name:name, theme:theme, url:url, comment:comment };
+  if (editingLienId) { await updateLien(editingLienId, payload); }
+  else { await insertLien(payload); }
+  btn.textContent = 'Enregistrer le lien'; btn.disabled = false;
+  closeLienEditor();
+  await renderLiens();
+}
+async function deleteLien(id) {
+  if (!confirm('Supprimer ce lien ?')) return;
+  await deleteLienDb(id);
+  await renderLiens();
+}
 </script>
 </body>
 </html>
