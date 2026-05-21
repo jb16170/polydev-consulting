@@ -433,18 +433,22 @@
     .blog-filter-btn:hover { border-color: var(--gold); color: var(--gold); }
     .blog-filter-btn.active { color: #fff; border-color: transparent; }
     .blog-filter-btn[data-theme="Tous"].active                         { background: var(--text); }
-    .blog-filter-btn[data-theme="Matériaux & Formulation"].active      { background: #0077cc; }
+    .blog-filter-btn[data-theme="Vie de l'entreprise"].active           { background: #b5860d; }
+    .blog-filter-btn[data-theme="Matériaux & Formulation"].active       { background: #0077cc; }
     .blog-filter-btn[data-theme="Procédés & Industrialisation"].active  { background: #1a7a4a; }
     .blog-filter-btn[data-theme="Caractérisation & Essais"].active      { background: #7a3a9a; }
     .blog-filter-btn[data-theme="Réglementation & Conformité"].active   { background: #c0622a; }
     .blog-filter-btn[data-theme="Veille & Innovations"].active          { background: #2a7a9a; }
+    .blog-filter-btn[data-theme="Publications techniques"].active        { background: #5a6a2a; }
 
     /* badge couleurs par thème */
-    .blog-category[data-theme="Matériaux & Formulation"]      { border-color:#0077cc; color:#0077cc; }
+    .blog-category[data-theme="Vie de l'entreprise"]           { border-color:#b5860d; color:#b5860d; }
+    .blog-category[data-theme="Matériaux & Formulation"]       { border-color:#0077cc; color:#0077cc; }
     .blog-category[data-theme="Procédés & Industrialisation"]  { border-color:#1a7a4a; color:#1a7a4a; }
     .blog-category[data-theme="Caractérisation & Essais"]      { border-color:#7a3a9a; color:#7a3a9a; }
     .blog-category[data-theme="Réglementation & Conformité"]   { border-color:#c0622a; color:#c0622a; }
     .blog-category[data-theme="Veille & Innovations"]          { border-color:#2a7a9a; color:#2a7a9a; }
+    .blog-category[data-theme="Publications techniques"]        { border-color:#5a6a2a; color:#5a6a2a; }
 
     .blog-card.hidden-card { display: none; }
 
@@ -490,6 +494,123 @@
 
     /* ─── CONTACT ─── */
     #page-contact { background: var(--ink); }
+
+    /* ─── LIENS UTILES ─── */
+    #page-liens { background: var(--ink); }
+
+    .liens-theme-block { margin-bottom: 3rem; }
+    .liens-theme-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 2px solid var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .liens-theme-title span {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      padding: 0.2rem 0.5rem;
+      vertical-align: middle;
+    }
+
+    .liens-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem;
+    }
+
+    .lien-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 1.4rem 1.6rem;
+      position: relative;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .lien-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--gold);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.3s;
+    }
+    .lien-card:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,119,204,0.10); }
+    .lien-card:hover::before { transform: scaleY(1); }
+
+    .lien-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.15rem;
+      letter-spacing: 0.06em;
+      color: var(--text);
+    }
+    .lien-comment {
+      font-size: 0.85rem;
+      color: var(--silver);
+      line-height: 1.65;
+      flex: 1;
+    }
+    .lien-url {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--gold);
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      word-break: break-all;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.3rem;
+    }
+    .lien-url:hover { text-decoration: underline; }
+    .lien-actions { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+    .lien-btn-edit, .lien-btn-delete {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.6rem;
+      border: 1px solid var(--border);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lien-btn-edit { color: var(--gold); }
+    .lien-btn-edit:hover { border-color: var(--gold); background: rgba(0,119,204,0.07); }
+    .lien-btn-delete { color: #c06060; }
+    .lien-btn-delete:hover { border-color: #c06060; background: rgba(192,96,96,0.07); }
+
+    /* éditeur liens */
+    .liens-editor {
+      display: none;
+      background: var(--panel);
+      border: 1px solid var(--gold);
+      padding: 2.5rem;
+      margin-top: 2rem;
+    }
+    .liens-editor.open { display: block; }
+    .liens-empty {
+      text-align: center;
+      padding: 3rem 2rem;
+      border: 1px dashed var(--border);
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+    }
 
     .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
     .contact-detail { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
@@ -775,6 +896,7 @@
     <li><a onclick="goTo('processus')" data-page="processus">Processus</a></li>
     <li><a onclick="goTo('secteurs')" data-page="secteurs">Industries</a></li>
     <li><a onclick="goTo('blog')" data-page="blog">Blog</a></li>
+    <li><a onclick="goTo('liens')" data-page="liens">Liens utiles</a></li>
     <li><a onclick="goTo('contact')" data-page="contact">Contact</a></li>
   </ul>
   <span class="nav-cta" onclick="goTo('contact')">Nous contacter</span>
@@ -1048,11 +1170,13 @@
       <!-- FILTRES PAR THÈME -->
       <div class="blog-filters">
         <button class="blog-filter-btn active" data-theme="Tous" onclick="filterBlog('Tous')">Tous</button>
+        <button class="blog-filter-btn" data-theme="Vie de l'entreprise" onclick="filterBlog('Vie de l\'entreprise')">Vie de l'entreprise</button>
         <button class="blog-filter-btn" data-theme="Matériaux & Formulation" onclick="filterBlog('Matériaux & Formulation')">Matériaux & Formulation</button>
         <button class="blog-filter-btn" data-theme="Procédés & Industrialisation" onclick="filterBlog('Procédés & Industrialisation')">Procédés & Industrialisation</button>
         <button class="blog-filter-btn" data-theme="Caractérisation & Essais" onclick="filterBlog('Caractérisation & Essais')">Caractérisation & Essais</button>
         <button class="blog-filter-btn" data-theme="Réglementation & Conformité" onclick="filterBlog('Réglementation & Conformité')">Réglementation & Conformité</button>
         <button class="blog-filter-btn" data-theme="Veille & Innovations" onclick="filterBlog('Veille & Innovations')">Veille & Innovations</button>
+        <button class="blog-filter-btn" data-theme="Publications techniques" onclick="filterBlog('Publications techniques')">Publications techniques</button>
       </div>
 
       <div id="blog-grid" class="blog-grid"></div>
@@ -1064,11 +1188,13 @@
         <div class="editor-row">
           <div class="editor-group"><label>Titre de l'article</label><input type="text" id="art-title" placeholder="Titre de votre article" /></div>
           <div class="editor-group"><label>Thème</label><select id="art-category">
+            <option value="Vie de l'entreprise">Vie de l'entreprise</option>
             <option value="Matériaux & Formulation">Matériaux & Formulation</option>
             <option value="Procédés & Industrialisation">Procédés & Industrialisation</option>
             <option value="Caractérisation & Essais">Caractérisation & Essais</option>
             <option value="Réglementation & Conformité">Réglementation & Conformité</option>
             <option value="Veille & Innovations">Veille & Innovations</option>
+            <option value="Publications techniques">Publications techniques</option>
           </select></div>
         </div>
         <div class="editor-group"><label>Résumé (affiché sur la carte)</label><input type="text" id="art-excerpt" placeholder="Courte description de l'article..." /></div>
@@ -1080,6 +1206,47 @@
       </div>
 
       <div style="text-align:center;margin-top:2rem;" id="login-btn-wrapper">
+        <button class="btn-ghost" style="font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.6rem 1.4rem;cursor:pointer;color:var(--gold);border-color:var(--gold);" onclick="openLogin()">Espace administrateur</button>
+      </div>
+    </div>
+    <footer>
+      <div class="footer-left"><div class="footer-logo">POLY<span>DEV</span> CONSULTING</div><div class="footer-copy">© 2025 Polydev Consulting — Tous droits réservés</div></div>
+      <div class="footer-right"><div class="footer-copy">Mentions légales · Politique de confidentialité</div></div>
+    </footer>
+  </div>
+
+  <!-- ═══════════════ PAGE : LIENS UTILES ═══════════════ -->
+  <div class="page" id="page-liens">
+    <div class="page-inner">
+      <div class="section-tag">Ressources</div>
+      <h2>Liens Utiles</h2>
+      <p class="section-intro">Une sélection de ressources, organismes et outils utiles dans l'univers des élastomères et matériaux polymères.</p>
+
+      <div class="admin-bar" id="liens-admin-bar" style="display:none;">
+        <button class="btn-admin active" onclick="openLienEditor()">+ Ajouter un lien</button>
+        <button class="btn-admin" onclick="logoutAdmin()">Déconnexion</button>
+      </div>
+
+      <div id="liens-container"></div>
+      <div id="liens-empty" class="liens-empty" style="display:none;">Aucun lien ajouté pour le moment.</div>
+
+      <div class="liens-editor" id="liens-editor">
+        <div class="editor-title" id="lien-editor-title">Nouveau Lien</div>
+        <div class="editor-row">
+          <div class="editor-group"><label>Nom du lien</label><input type="text" id="lien-name" placeholder="Ex : AFNOR, ISO, SNCP..." /></div>
+          <div class="editor-group"><label>Thème</label><input type="text" id="lien-theme" placeholder="Ex : Normes & Organismes" list="lien-themes-list" />
+            <datalist id="lien-themes-list"></datalist>
+          </div>
+        </div>
+        <div class="editor-group"><label>URL</label><input type="url" id="lien-url" placeholder="https://..." /></div>
+        <div class="editor-group"><label>Commentaire</label><textarea id="lien-comment" placeholder="Décrivez brièvement ce lien et son utilité..." style="min-height:90px;"></textarea></div>
+        <div class="editor-actions">
+          <button class="btn-publish" id="lien-btn-save" onclick="saveLien()">Enregistrer le lien</button>
+          <button class="btn-cancel-editor" onclick="closeLienEditor()">Annuler</button>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:2rem;" id="liens-login-btn">
         <button class="btn-ghost" style="font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.6rem 1.4rem;cursor:pointer;color:var(--gold);border-color:var(--gold);" onclick="openLogin()">Espace administrateur</button>
       </div>
     </div>
@@ -1214,6 +1381,8 @@ function goTo(pageId) {
 
   // load blog when navigating to it
   if (pageId === 'blog') renderBlog();
+  // load liens when navigating to it
+  if (pageId === 'liens') renderLiens();
 }
 
 // ─── SUPABASE ───
@@ -1241,11 +1410,13 @@ async function deleteArticleDb(id) { return sbFetch('articles?id=eq.'+id,'DELETE
 
 // ─── BLOG ───
 var THEME_COLORS = {
+  'Vie de l\'entreprise':         '#b5860d',
   'Matériaux & Formulation':      '#0077cc',
   'Procédés & Industrialisation': '#1a7a4a',
   'Caractérisation & Essais':     '#7a3a9a',
   'Réglementation & Conformité':  '#c0622a',
-  'Veille & Innovations':         '#2a7a9a'
+  'Veille & Innovations':         '#2a7a9a',
+  'Publications techniques':      '#5a6a2a'
 };
 var currentFilter = 'Tous';
 
@@ -1335,8 +1506,11 @@ function checkLogin() {
   if (pw === '3dh27ahJ@bou17!') {
     isAdmin = true; closeLogin();
     document.getElementById('admin-bar').style.display = 'flex';
+    document.getElementById('liens-admin-bar').style.display = 'flex';
     document.getElementById('login-btn-wrapper').style.display = 'none';
+    document.getElementById('liens-login-btn').style.display = 'none';
     renderBlog();
+    renderLiens();
   } else {
     document.getElementById('login-error').classList.add('show');
   }
@@ -1344,8 +1518,10 @@ function checkLogin() {
 function logoutAdmin() {
   isAdmin = false;
   document.getElementById('admin-bar').style.display = 'none';
+  document.getElementById('liens-admin-bar').style.display = 'none';
   document.getElementById('login-btn-wrapper').style.display = 'block';
-  closeEditor(); renderBlog();
+  document.getElementById('liens-login-btn').style.display = 'block';
+  closeEditor(); closeLienEditor(); renderBlog(); renderLiens();
 }
 
 // ─── ÉDITEUR ───
@@ -1486,7 +1662,112 @@ window.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Page initiale = home
+  // ─── LIENS UTILES ───
+  var editingLienId = null;
+
+  async function getLiens() { return (await sbFetch('liens?order=theme.asc,created_at.asc','GET')) || []; }
+  async function insertLien(l) { return sbFetch('liens','POST',l); }
+  async function updateLien(id,l) { return sbFetch('liens?id=eq.'+id,'PATCH',l); }
+  async function deleteLienDb(id) { return sbFetch('liens?id=eq.'+id,'DELETE'); }
+
+  async function renderLiens() {
+    var container = document.getElementById('liens-container');
+    var empty = document.getElementById('liens-empty');
+    if (!container) return;
+    container.innerHTML = '<div style="color:var(--muted);font-family:monospace;font-size:0.75rem;padding:2rem;text-align:center;">Chargement...</div>';
+    var liens = await getLiens();
+    container.innerHTML = '';
+    if (!liens || !liens.length) { empty.style.display='block'; return; }
+    empty.style.display = 'none';
+
+    // group by theme
+    var groups = {};
+    liens.forEach(function(l) {
+      var t = l.theme || 'Autres';
+      if (!groups[t]) groups[t] = [];
+      groups[t].push(l);
+    });
+
+    // update datalist
+    var dl = document.getElementById('lien-themes-list');
+    if (dl) { dl.innerHTML = Object.keys(groups).map(function(t){ return '<option value="'+t+'">'; }).join(''); }
+
+    Object.keys(groups).forEach(function(theme) {
+      var block = document.createElement('div');
+      block.className = 'liens-theme-block';
+      var count = groups[theme].length;
+      block.innerHTML = '<div class="liens-theme-title">'+theme+' <span>'+count+' lien'+(count>1?'s':'')+'</span></div>'
+        +'<div class="liens-grid" id="grid-'+theme.replace(/\W/g,'_')+'"></div>';
+      container.appendChild(block);
+
+      var grid = block.querySelector('.liens-grid');
+      groups[theme].forEach(function(l) {
+        var card = document.createElement('div');
+        card.className = 'lien-card';
+        var adminBtns = isAdmin
+          ? '<div class="lien-actions">'
+            +'<button class="lien-btn-edit" onclick="editLien(\''+l.id+'\')">✎ Modifier</button>'
+            +'<button class="lien-btn-delete" onclick="deleteLien(\''+l.id+'\')">✕ Supprimer</button>'
+            +'</div>'
+          : '';
+        card.innerHTML = '<div class="lien-name">'+l.name+'</div>'
+          +'<div class="lien-comment">'+l.comment+'</div>'
+          +'<a class="lien-url" href="'+l.url+'" target="_blank" rel="noopener">↗ '+l.url+'</a>'
+          +adminBtns;
+        grid.appendChild(card);
+      });
+    });
+  }
+
+  function openLienEditor() {
+    editingLienId = null;
+    document.getElementById('lien-editor-title').textContent = 'Nouveau Lien';
+    document.getElementById('lien-name').value = '';
+    document.getElementById('lien-theme').value = '';
+    document.getElementById('lien-url').value = '';
+    document.getElementById('lien-comment').value = '';
+    document.getElementById('liens-editor').classList.add('open');
+    document.getElementById('liens-editor').scrollIntoView({behavior:'smooth'});
+  }
+  function closeLienEditor() {
+    document.getElementById('liens-editor').classList.remove('open');
+    editingLienId = null;
+  }
+  async function editLien(id) {
+    var liens = await getLiens();
+    var l = liens.find(function(x){ return x.id===id; });
+    if (!l) return;
+    editingLienId = id;
+    document.getElementById('lien-editor-title').textContent = 'Modifier le lien';
+    document.getElementById('lien-name').value = l.name;
+    document.getElementById('lien-theme').value = l.theme;
+    document.getElementById('lien-url').value = l.url;
+    document.getElementById('lien-comment').value = l.comment;
+    document.getElementById('liens-editor').classList.add('open');
+    document.getElementById('liens-editor').scrollIntoView({behavior:'smooth'});
+  }
+  async function saveLien() {
+    var name    = document.getElementById('lien-name').value.trim();
+    var theme   = document.getElementById('lien-theme').value.trim();
+    var url     = document.getElementById('lien-url').value.trim();
+    var comment = document.getElementById('lien-comment').value.trim();
+    if (!name || !url || !theme) { alert('Veuillez remplir le nom, le thème et l\'URL.'); return; }
+    var btn = document.getElementById('lien-btn-save');
+    btn.textContent = 'Enregistrement...'; btn.disabled = true;
+    var payload = { name:name, theme:theme, url:url, comment:comment };
+    if (editingLienId) { await updateLien(editingLienId, payload); }
+    else { await insertLien(payload); }
+    btn.textContent = 'Enregistrer le lien'; btn.disabled = false;
+    closeLienEditor();
+    await renderLiens();
+  }
+  async function deleteLien(id) {
+    if (!confirm('Supprimer ce lien ?')) return;
+    await deleteLienDb(id);
+    await renderLiens();
+  }
+
+
   goTo('home');
 });
 </script>
